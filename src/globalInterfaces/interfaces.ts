@@ -10,3 +10,12 @@ interface Event {
     start_time: number;
     end_time: number;
 }
+
+export interface VisPanelSettings {
+    width: number;
+    height: number;
+    timelineWidth: number;
+    timelineHeight: number;
+    timelineMax: number;
+    timelineRectHeight: number;
+}

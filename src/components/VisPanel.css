@@ -1,0 +1,35 @@
+#panel-container {
+    background-color: #fffcf9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-line {
+    stroke: #8c8c8c;
+}
+
+.activity-sample-container {
+    width: 100%;
+}
+
+.activity-sample-vis-container {
+    display: flex;
+}
+
+.sample-title {
+    display: flex;
+    width: 90px;
+    color: #411919;
+    font-size: 13px;
+    text-align: right;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+.sample-title p {
+    padding-right: 15px;
+    padding-bottom: 5px;
+    margin: 0;
+    height: fit-content;
+}
