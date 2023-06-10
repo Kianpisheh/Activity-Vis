@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import jsonData from "./activity_data.json";
 
 import "./App.css";
 import VisPanel from "./components/VisPanel";
 import { Activity } from "./globalInterfaces/interfaces";
+import { readActivityData } from "./helpers/ActivityDataHelpers";
 
 function App() {
     const visPanelSettings = {
@@ -17,7 +18,13 @@ function App() {
     };
 
     // read activity data
+    const dataPath = "/EPIC_100_train.json";
     let activities: Activity[] = jsonData;
+    let acts: Activity[] = [];
+
+    useEffect(() => {
+        readActivityData(dataPath, "epic");
+    }, []);
 
     return (
         <div className="App">
