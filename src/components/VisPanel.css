@@ -5,6 +5,11 @@
     justify-content: center;
 }
 
+#vis-panel {
+    display: flex;
+    flex-direction: column;
+}
+
 .timeline-line {
     stroke: #8c8c8c;
 }
@@ -32,4 +37,9 @@
     padding-bottom: 5px;
     margin: 0;
     height: fit-content;
+}
+
+.tooltip-text {
+    fill: #411919;
+    font-size: 12px;
 }

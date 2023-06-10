@@ -1,4 +1,5 @@
 import React from "react";
+import jsonData from "./activity_data.json";
 
 import "./App.css";
 import VisPanel from "./components/VisPanel";
@@ -11,20 +12,12 @@ function App() {
         timelineWidth: 600,
         timelineHeight: 40,
         timelineMax: 200,
-        timelineRectHeight: 10,
+        timelineRectHeight: 8,
+        tooltipHeight: 15,
     };
 
-    let activities: Activity[] = [
-        {
-            klass: "cooking",
-            name: "cooking_1",
-            events: [
-                { klass: "mug", name: "mug_1", start_time: 10, end_time: 20 },
-                { klass: "stove", name: "stove_1", start_time: 70, end_time: 120 },
-                { klass: "fridge", name: "fridge_1", start_time: 130, end_time: 135 },
-            ],
-        },
-    ];
+    // read activity data
+    let activities: Activity[] = jsonData;
 
     return (
         <div className="App">

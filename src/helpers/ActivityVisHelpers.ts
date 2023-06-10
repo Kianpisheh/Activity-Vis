@@ -13,8 +13,8 @@ export const getTimelineCoords = (
 ): Coords => {
     let coords: Coords = { x1: 0, x2: 0 };
     // time to pixel
-    coords.x1 = Math.round(((t1 - tmin) / (tmax - tmin)) * timelineWidth);
-    coords.x2 = Math.round(((t2 - tmin) / (tmax - tmin)) * timelineWidth);
+    coords.x1 = Math.round(((t1 - tmin) / tmax) * timelineWidth);
+    coords.x2 = Math.round(((t2 - tmin) / tmax) * timelineWidth);
 
     return coords;
 };

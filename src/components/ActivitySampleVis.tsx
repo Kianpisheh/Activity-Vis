@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces";
 import { getTimelineCoords } from "../helpers/ActivityVisHelpers";
@@ -9,7 +9,15 @@ interface ActivitySampleVisProp {
 }
 
 const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings }) => {
-    const { timelineWidth, timelineHeight, timelineRectHeight, timelineMax } = settings;
+    const [hovered, setHovered] = useState(-1);
+
+    const {
+        timelineWidth,
+        timelineHeight,
+        timelineRectHeight,
+        timelineMax,
+        tooltipHeight,
+    } = settings;
     const tmin = activity.events[0].start_time;
     return (
         <div className="activity-sample-vis-container">
@@ -26,7 +34,6 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                         y2={timelineHeight - 3}
                     ></line>
                     {activity.events.map((ev, idx) => {
-                        console.log(ev);
                         const coords = getTimelineCoords(
                             ev.start_time,
                             ev.end_time,
@@ -36,13 +43,31 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                             timelineWidth
                         );
                         return (
-                            <rect
-                                key={idx}
-                                x={coords.x1}
-                                y={timelineHeight - 6}
-                                width={coords.x2 - coords.x1}
-                                height={timelineRectHeight}
-                            ></rect>
+                            <g>
+                                <rect
+                                    key={idx}
+                                    x={coords.x1}
+                                    y={timelineHeight - timelineRectHeight - 6}
+                                    width={coords.x2 - coords.x1}
+                                    height={timelineRectHeight}
+                                    rx={2}
+                                    onMouseEnter={() => setHovered(idx)}
+                                    onMouseLeave={() => setHovered(-1)}
+                                ></rect>
+                                {hovered === idx && (
+                                    <text
+                                        className="tooltip-text"
+                                        x={coords.x1 + 10}
+                                        y={timelineHeight - tooltipHeight - 4}
+                                    >
+                                        {ev.klass +
+                                            "    " +
+                                            (ev.start_time - tmin).toString() +
+                                            "-" +
+                                            (ev.end_time - tmin).toString()}
+                                    </text>
+                                )}
+                            </g>
                         );
                     })}
                 </svg>

@@ -1,0 +1,48 @@
+[
+    {
+        "klass": "cooking",
+        "name": "cooking_1",
+        "events": [
+            { "klass": "mug", "name": "mug_1", "start_time": 10, "end_time": 20 },
+            { "klass": "stove", "name": "stove_1", "start_time": 70, "end_time": 120 },
+            { "klass": "fridge", "name": "fridge_1", "start_time": 130, "end_time": 135 }
+        ]
+    },
+    {
+        "klass": "drinking",
+        "name": "drinking_1",
+        "events": [
+            { "klass": "mug", "name": "mug_1", "start_time": 2, "end_time": 11 },
+            { "klass": "tap", "name": "tap_1", "start_time": 120, "end_time": 150 },
+            { "klass": "fridge", "name": "fridge_1", "start_time": 190, "end_time": 195 }
+        ]
+    },
+    {
+        "klass": "making coffee",
+        "name": "making coffee_1",
+        "events": [
+            { "klass": "mug", "name": "mug_1", "start_time": 40, "end_time": 50 },
+            { "klass": "stove", "name": "stove_1", "start_time": 60, "end_time": 65 },
+            { "klass": "cabinet", "name": "cabinet_1", "start_time": 90, "end_time": 111 },
+            { "klass": "coffee", "name": "coffee_1", "start_time": 150, "end_time": 200 }
+        ]
+    },
+    {
+        "klass": "cooking",
+        "name": "cooking_2",
+        "events": [
+            { "klass": "mug", "name": "mug_1", "start_time": 20, "end_time": 31 },
+            { "klass": "plate", "name": "plate_1", "start_time": 50, "end_time": 60 },
+            { "klass": "spoon", "name": "spoon_1", "start_time": 90, "end_time": 110 },
+            {
+                "klass": "cutting_board",
+                "name": "cutting_board_1",
+                "start_time": 114,
+                "end_time": 134
+            },
+            { "klass": "pan", "name": "pan_1", "start_time": 135, "end_time": 165 },
+            { "klass": "pot", "name": "pot_1", "start_time": 182, "end_time": 190 },
+            { "klass": "fridge", "name": "fridge_1", "start_time": 195, "end_time": 197 }
+        ]
+    }
+]
