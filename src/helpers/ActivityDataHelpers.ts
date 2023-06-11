@@ -12,7 +12,6 @@ export const readActivityData = (path: string, dataset: string) => {
         })
             .then((res) => res.json())
             .then((jsonData) => {
-                console.log(jsonData);
                 return jsonData;
             });
     }
