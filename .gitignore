@@ -24,3 +24,4 @@ yarn-error.log*
 
 /activity_data
 /public/EPIC_100_train.json
+/public/.json
