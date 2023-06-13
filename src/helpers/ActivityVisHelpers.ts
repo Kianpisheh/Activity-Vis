@@ -18,3 +18,42 @@ export const getTimelineCoords = (
 
     return coords;
 };
+
+export const handleZoomEvent = (
+    zoom: string,
+    currentVisibleWidth: number,
+    minVisibleWidth: number
+): number => {
+    if (zoom === "+") {
+        return Math.round(1.2 * currentVisibleWidth);
+    }
+
+    return Math.max(minVisibleWidth, Math.round(0.8 * currentVisibleWidth));
+};
+
+type Tick = {
+    x: number;
+    label: string;
+};
+
+export const getTimelineTicks = (
+    visibleTimelineWidth: number,
+    timelineWidth: number,
+    tmax: number
+): Tick[] => {
+    const n = 4; // divisions
+    const N = n * Math.floor(timelineWidth / visibleTimelineWidth);
+    const stepWidth = Math.floor(visibleTimelineWidth / n);
+    const stepTimeWidth = Math.floor(tmax / n);
+
+    let ticks: Tick[] = [];
+
+    for (let i = 0; i < N; i++) {
+        const x = i * stepWidth;
+        const label = (i * stepTimeWidth).toString();
+
+        ticks.push({ x: x, label: label });
+    }
+
+    return ticks;
+};

@@ -5,9 +5,29 @@
     justify-content: center;
 }
 
-#vis-panel {
+#activity-samples {
     display: flex;
     flex-direction: column;
+    overflow: scroll;
+    overflow-x: hidden;
+    background-color: #f9f4f0;
+}
+
+.activity-timeline-container {
+    overflow-x: scroll;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: transparent transparent;
+    width: 81%;
+}
+
+/* For WebKit browsers (Chrome, Edge, and Safari) */
+.activity-timeline-container::-webkit-scrollbar {
+    width: 6px;
+    background-color: transparent;
+}
+
+.activity-timeline-container::-webkit-scrollbar-thumb {
+    background-color: transparent;
 }
 
 .timeline-line {
@@ -15,7 +35,7 @@
 }
 
 .activity-sample-container {
-    width: 100%;
+    width: 97%;
 }
 
 .activity-sample-vis-container {
@@ -24,19 +44,46 @@
 
 .sample-title {
     display: flex;
-    width: 90px;
-    color: #411919;
-    font-size: 13px;
+    width: 80px;
     text-align: right;
     justify-content: flex-end;
-    align-items: flex-end;
+    align-items: center;
 }
 
 .sample-title p {
+    color: #411919;
+    font-size: 13px;
     padding-right: 15px;
+    width: 80px;
     padding-bottom: 5px;
     margin: 0;
     height: fit-content;
+}
+
+.zoom-buttons-container {
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+    gap: 10px;
+    width: 60px;
+}
+
+.zoom-btn {
+    height: 20px;
+    width: 20px;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+    border: none;
+    border-radius: 3px;
+    color: #411919;
+    background-color: #e0d8d0;
+    cursor: pointer;
+}
+
+.tick-labels {
+    font-size: 12px;
 }
 
 .tooltip-text {

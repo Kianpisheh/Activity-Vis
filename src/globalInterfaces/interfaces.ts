@@ -14,7 +14,7 @@ interface Event {
 export interface VisPanelSettings {
     width: number;
     height: number;
-    timelineWidth: number;
+    initialVisibleTimelineWidth: number;
     timelineHeight: number;
     timelineMax: number;
     timelineRectHeight: number;
