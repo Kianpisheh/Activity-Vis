@@ -21,14 +21,14 @@ export const getTimelineCoords = (
 
 export const handleZoomEvent = (
     zoom: string,
-    currentVisibleWidth: number,
-    minVisibleWidth: number
+    currentTimelineMax: number,
+    minTimelineMax: number
 ): number => {
-    if (zoom === "+") {
-        return Math.round(1.2 * currentVisibleWidth);
+    if (zoom === "-") {
+        return Math.min(minTimelineMax, Math.round(1.2 * currentTimelineMax));
     }
 
-    return Math.max(minVisibleWidth, Math.round(0.8 * currentVisibleWidth));
+    return Math.round(0.8 * currentTimelineMax);
 };
 
 type Tick = {
@@ -41,7 +41,7 @@ export const getTimelineTicks = (
     timelineWidth: number,
     tmax: number
 ): Tick[] => {
-    const n = 4; // divisions
+    const n = 5; // divisions
     const N = n * Math.floor(timelineWidth / visibleTimelineWidth);
     const stepWidth = Math.floor(visibleTimelineWidth / n);
     const stepTimeWidth = Math.floor(tmax / n);

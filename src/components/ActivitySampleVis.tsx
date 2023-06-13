@@ -14,15 +14,15 @@ interface ActivitySampleVisProp {
 
 const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings }) => {
     const {
-        initialVisibleTimelineWidth,
+        visibleTimelineWidth,
         timelineHeight,
         timelineRectHeight,
-        timelineMax,
+        initialTimelineMax,
         tooltipHeight,
     } = settings;
 
     const [hoveredEvent, setHoveredEvent] = useState(-1);
-    const [visibleTimelineWidth, setVisibleTimelineWidth] = useState(initialVisibleTimelineWidth);
+    const [timelineMax, setTimelineMax] = useState(initialTimelineMax);
     const [timelineIsHovered, setTimelineIsHovered] = useState(false);
 
     const tmin = activity.events[0].start_time;
@@ -31,6 +31,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
     let timelineWidth = Math.ceil(
         (activity.events[last_idx].end_time / timelineMax) * visibleTimelineWidth
     );
+
     timelineWidth = timelineWidth < visibleTimelineWidth ? visibleTimelineWidth : timelineWidth;
 
     const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineMax);
@@ -54,18 +55,13 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                         y2={timelineHeight - 14}
                     ></line>
                     {/*timeline ticks*/}
-                    {/* {[0, 0.25, 0.5, 0.75, 1].map((c) => {
+                    {timelineTicks.map((tick, idx) => {
                         return (
-                            <text
-                                key={c}
-                                className="tick-labels"
-                                x={Math.round(c)}
-                                y={timelineHeight}
-                            >
-                                {"0"}
+                            <text key={idx} className="tick-labels" x={tick.x} y={timelineHeight}>
+                                {tick.label}
                             </text>
                         );
-                    })} */}
+                    })}
 
                     {activity.events.map((ev, idx) => {
                         const coords = getTimelineCoords(
@@ -111,13 +107,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                     <button
                         className="zoom-btn"
                         onClick={() =>
-                            setVisibleTimelineWidth(
-                                handleZoomEvent(
-                                    "-",
-                                    visibleTimelineWidth,
-                                    initialVisibleTimelineWidth
-                                )
-                            )
+                            setTimelineMax(handleZoomEvent("-", timelineMax, initialTimelineMax))
                         }
                     >
                         -
@@ -125,13 +115,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                     <button
                         className="zoom-btn"
                         onClick={() =>
-                            setVisibleTimelineWidth(
-                                handleZoomEvent(
-                                    "+",
-                                    visibleTimelineWidth,
-                                    initialVisibleTimelineWidth
-                                )
-                            )
+                            setTimelineMax(handleZoomEvent("+", timelineMax, initialTimelineMax))
                         }
                     >
                         +

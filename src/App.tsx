@@ -12,9 +12,9 @@ function App() {
     const visPanelSettings = {
         width: 1300,
         height: 800,
-        initialVisibleTimelineWidth: 900,
+        visibleTimelineWidth: 900,
         timelineHeight: 50,
-        timelineMax: 500,
+        initialTimelineMax: 500,
         timelineRectHeight: 8,
         tooltipHeight: 15,
     };

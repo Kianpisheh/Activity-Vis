@@ -15,7 +15,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings }) => {
             <div
                 id="activity-samples"
                 style={{
-                    width: Math.round(settings.initialVisibleTimelineWidth),
+                    width: Math.round(settings.visibleTimelineWidth),
                     height: Math.round(0.8 * settings.height),
                 }}
             >
