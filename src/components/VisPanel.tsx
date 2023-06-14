@@ -3,13 +3,15 @@ import React, { useEffect, useRef } from "react";
 import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
+import { assignColors } from "../helpers/colorHelper";
 
 interface VisPanelProps {
     activities: Activity[];
+    colors: { [key: string]: string };
     settings: VisPanelSettings;
 }
 
-const VisPanel: React.FC<VisPanelProps> = ({ activities, settings }) => {
+const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => {
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
             <div
@@ -22,7 +24,11 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings }) => {
                 {activities.map((activity, idx) => {
                     return (
                         <div key={idx} className="activity-sample-container">
-                            <ActivitySampleVis activity={activity} settings={settings} />
+                            <ActivitySampleVis
+                                activity={activity}
+                                settings={settings}
+                                colors={colors}
+                            />
                         </div>
                     );
                 })}

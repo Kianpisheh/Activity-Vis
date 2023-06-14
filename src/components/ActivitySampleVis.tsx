@@ -10,9 +10,10 @@ import {
 interface ActivitySampleVisProp {
     activity: Activity;
     settings: VisPanelSettings;
+    colors: { [key: string]: string };
 }
 
-const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings }) => {
+const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings, colors }) => {
     const {
         visibleTimelineWidth,
         timelineHeight,
@@ -26,14 +27,12 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
     const [timelineIsHovered, setTimelineIsHovered] = useState(false);
 
     const tmin = activity.events[0].start_time;
-
     const last_idx = activity.events.length - 1;
     let timelineWidth = Math.ceil(
         (activity.events[last_idx].end_time / timelineMax) * visibleTimelineWidth
     );
 
     timelineWidth = timelineWidth < visibleTimelineWidth ? visibleTimelineWidth : timelineWidth;
-
     const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineMax);
 
     return (
@@ -83,6 +82,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                                     rx={2}
                                     onMouseEnter={() => setHoveredEvent(idx)}
                                     onMouseLeave={() => setHoveredEvent(-1)}
+                                    fill={colors[ev.klass]}
                                 ></rect>
                                 {hoveredEvent === idx && (
                                     <text
@@ -92,9 +92,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
                                     >
                                         {ev.klass +
                                             "    " +
-                                            (ev.start_time - tmin).toString() +
+                                            Math.round(ev.start_time - tmin).toString() +
                                             "-" +
-                                            (ev.end_time - tmin).toString()}
+                                            Math.round(ev.end_time - tmin).toString()}
                                     </text>
                                 )}
                             </g>

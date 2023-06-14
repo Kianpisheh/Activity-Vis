@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import jsonData from "./activity_data.json";
 
 import "./App.css";
 import VisPanel from "./components/VisPanel";
 import { Activity } from "./globalInterfaces/interfaces";
-import { readActivityData } from "./helpers/ActivityDataHelpers";
+import { readActivityData, readEventsList } from "./helpers/ActivityDataHelpers";
+import { assignColors } from "./helpers/colorHelper";
 
 function App() {
-    const [activityData, setActivityData] = useState([]);
+    const [activityData, setActivityData] = useState<Activity[]>([]);
+    const [eventsList, setEventsList] = useState<string[]>([]);
+    const [eventColors, setEventColors] = useState<{ [key: string]: string }>({});
 
     const visPanelSettings = {
         width: 1300,
@@ -21,13 +23,22 @@ function App() {
 
     // read activity data
     const dataPath = "/EPIC_100_train.json";
-    let activities: Activity[] = jsonData;
-    let acts: Activity[] = [];
+    const eventsPath = "/EPIC_events.txt";
 
     useEffect(() => {
         readActivityData(dataPath, "epic")
             .then((res) => setActivityData(res))
             .catch((err) => console.log(err));
+
+        readEventsList(eventsPath)
+            .then((res) => {
+                setEventsList(res);
+                setEventColors(assignColors(res));
+            })
+            .catch((err) => {
+                console.log(err);
+                setEventsList([]);
+            });
     }, []);
 
     return (
@@ -39,7 +50,11 @@ function App() {
                     height: visPanelSettings.height,
                 }}
             >
-                <VisPanel activities={activityData} settings={visPanelSettings}></VisPanel>
+                <VisPanel
+                    activities={activityData}
+                    settings={visPanelSettings}
+                    colors={eventColors}
+                ></VisPanel>
             </div>
         </div>
     );
