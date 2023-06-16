@@ -4,15 +4,17 @@ import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
+import { handleFilterTextChange } from "../helpers/ActivityVisHelpers.ts";
 
 interface VisPanelProps {
     activities: Activity[];
     colors: { [key: string]: string };
     settings: VisPanelSettings;
+    eventsList: string[];
 }
 
-const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => {
-    const [filterText, setFilterText] = useState<string>("");
+const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, eventsList }) => {
+    const [filterList, setFilterList] = useState<string[]>([]);
     const [visibleSamples, setVisibleSamples] = useState<string[]>([]);
 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
@@ -33,7 +35,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
                 if (entries[i].isIntersecting && entries[i].target) {
                     if (idd !== null) {
                         addedSamples.push(idd);
-                        console.log("first");
                     }
                 } else if (!entries[i].isIntersecting) {
                     if (idd !== null) {
@@ -65,9 +66,18 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
             <FilterField
-                filterText={filterText}
-                handleFilterChange={(filterText: string) => {
-                    setFilterText(filterText);
+                onFilterTextChange={(currentFilterText: string, prevFilterText: string) => {
+                    const { updatedFilterList, update } = handleFilterTextChange(
+                        currentFilterText,
+                        prevFilterText,
+                        filterList,
+                        eventsList
+                    );
+                    if (update) {
+                        console.log("updated");
+                        console.log(updatedFilterList);
+                        setFilterList(updatedFilterList);
+                    }
                 }}
             />
             <div
@@ -90,7 +100,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
                                 activity={activity}
                                 settings={settings}
                                 colors={colors}
-                                filterList={filterText.split(",")}
+                                filterList={["a"]}
                                 sampleID={idx.toString()}
                                 visibleSamples={visibleSamples}
                             />
@@ -103,18 +113,3 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
 };
 
 export default VisPanel;
-
-// const onFilterTextChange = (txt: string): string[] => {
-//     const events = txt.split(",");
-//     if (events.length !== currentFilterList.length) {
-//         return events;
-//     }
-
-//     for (let ev of events) {
-//         if (!currentFilterList.includes(ev)) {
-//             return events;
-//         }
-//     }
-
-//     return [];
-// };

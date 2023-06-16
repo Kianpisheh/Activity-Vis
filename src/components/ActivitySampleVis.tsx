@@ -45,6 +45,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
     timelineWidth = timelineWidth < visibleTimelineWidth ? visibleTimelineWidth : timelineWidth;
     const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineMax);
 
+    console.log("rendered");
     return (
         <div
             className="activity-sample-vis-container"

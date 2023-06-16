@@ -54,6 +54,7 @@ function App() {
                     activities={activityData}
                     settings={visPanelSettings}
                     colors={eventColors}
+                    eventsList={eventsList}
                 ></VisPanel>
             </div>
         </div>

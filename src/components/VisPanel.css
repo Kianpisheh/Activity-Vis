@@ -4,6 +4,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 30px;
 }
 
 #activity-samples {
@@ -90,4 +91,26 @@
 .tooltip-text {
     fill: #411919;
     font-size: 12px;
+}
+
+/* filter field styling */
+#filter-field {
+    border-radius: 5px;
+    height: 25px;
+    width: 250px;
+    border: solid 1px #988282;
+    text-indent: 8px;
+    color: #411919;
+}
+
+#filter-field:focus {
+    outline: none;
+}
+
+#filter-field-label {
+    align-items: center;
+    display: flex;
+    gap: 5px;
+    color: #624b4b;
+    font-size: 14px;
 }

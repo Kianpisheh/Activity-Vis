@@ -1,21 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface FilterFieldProps {
-    handleFilterChange: (filtText: string) => void;
-    filterText: string;
+    onFilterTextChange: (currentFilterText: string, prevFilterText: string) => void;
 }
 
-const FilterField: React.FC<FilterFieldProps> = ({ handleFilterChange, filterText }) => {
+const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange }) => {
+    const [filterText, setFilterText] = useState("");
+
     return (
         <div id="filter-field-container">
-            <label>Text Field:</label>
-            <input
-                type="text"
-                value={filterText}
-                onChange={(event) => {
-                    handleFilterChange(event.target.value);
-                }}
-            />
+            <label id="filter-field-label" htmlFor="filt-field">
+                Filter events
+                <input
+                    id="filter-field"
+                    name="filt-field"
+                    type="text"
+                    placeholder="Type events..."
+                    value={filterText}
+                    onChange={(event) => {
+                        onFilterTextChange(event.target.value, filterText);
+                        setFilterText(event.target.value);
+                    }}
+                />{" "}
+            </label>
         </div>
     );
 };
