@@ -18,21 +18,22 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
 
-    console.log(visibleSamples);
-
     useEffect(() => {
-        const options = { root: activitySamplesContainerRef.current, threshold: 0.0 };
+        const options = {
+            root: activitySamplesContainerRef.current,
+            threshold: 0.0,
+            rootMargin: "1000px",
+        };
 
         const observerCallback = (entries: IntersectionObserverEntry[]) => {
             let addedSamples: string[] = [];
             let removedSamples: string[] = [];
-            console.log(entries.length);
             for (let i = 0; i < entries.length; i++) {
                 const idd = entries[i].target.getAttribute("sample-id");
                 if (entries[i].isIntersecting && entries[i].target) {
-                    console.log("entered");
                     if (idd !== null) {
                         addedSamples.push(idd);
+                        console.log("first");
                     }
                 } else if (!entries[i].isIntersecting) {
                     if (idd !== null) {
@@ -55,7 +56,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors }) => 
                 observer.observe(sampleRef);
             }
         });
-        console.log("calling");
 
         return () => {
             observer.disconnect();
