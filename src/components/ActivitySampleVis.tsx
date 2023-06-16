@@ -11,9 +11,19 @@ interface ActivitySampleVisProp {
     activity: Activity;
     settings: VisPanelSettings;
     colors: { [key: string]: string };
+    filterList: string[];
+    visibleSamples: string[];
+    sampleID: string;
 }
 
-const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings, colors }) => {
+const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
+    activity,
+    settings,
+    colors,
+    filterList,
+    sampleID,
+    visibleSamples,
+}) => {
     const {
         visibleTimelineWidth,
         timelineHeight,
@@ -46,60 +56,69 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({ activity, settings
             </div>
             <div className="activity-timeline-container">
                 <svg className="timeline-svg" width={timelineWidth} height={timelineHeight}>
-                    <line
-                        className="timeline-line"
-                        x1={0}
-                        x2={timelineWidth}
-                        y1={timelineHeight - 14}
-                        y2={timelineHeight - 14}
-                    ></line>
+                    {visibleSamples.includes(sampleID) && (
+                        <line
+                            className="timeline-line"
+                            x1={0}
+                            x2={timelineWidth}
+                            y1={timelineHeight - 14}
+                            y2={timelineHeight - 14}
+                        ></line>
+                    )}
                     {/*timeline ticks*/}
-                    {timelineTicks.map((tick, idx) => {
-                        return (
-                            <text key={idx} className="tick-labels" x={tick.x} y={timelineHeight}>
-                                {tick.label}
-                            </text>
-                        );
-                    })}
-
-                    {activity.events.map((ev, idx) => {
-                        const coords = getTimelineCoords(
-                            ev.start_time,
-                            ev.end_time,
-                            tmin,
-                            timelineMax,
-                            0,
-                            visibleTimelineWidth
-                        );
-                        return (
-                            <g key={idx}>
-                                <rect
+                    {visibleSamples.includes(sampleID) &&
+                        timelineTicks.map((tick, idx) => {
+                            return (
+                                <text
                                     key={idx}
-                                    x={coords.x1}
-                                    y={timelineHeight - timelineRectHeight - 20}
-                                    width={coords.x2 - coords.x1}
-                                    height={timelineRectHeight}
-                                    rx={2}
-                                    onMouseEnter={() => setHoveredEvent(idx)}
-                                    onMouseLeave={() => setHoveredEvent(-1)}
-                                    fill={colors[ev.klass]}
-                                ></rect>
-                                {hoveredEvent === idx && (
-                                    <text
-                                        className="tooltip-text"
-                                        x={coords.x1 + 10}
-                                        y={timelineHeight - tooltipHeight - 22}
-                                    >
-                                        {ev.klass +
-                                            "    " +
-                                            Math.round(ev.start_time - tmin).toString() +
-                                            "-" +
-                                            Math.round(ev.end_time - tmin).toString()}
-                                    </text>
-                                )}
-                            </g>
-                        );
-                    })}
+                                    className="tick-labels"
+                                    x={tick.x}
+                                    y={timelineHeight}
+                                >
+                                    {tick.label}
+                                </text>
+                            );
+                        })}
+
+                    {visibleSamples.includes(sampleID) &&
+                        activity.events.map((ev, idx) => {
+                            const coords = getTimelineCoords(
+                                ev.start_time,
+                                ev.end_time,
+                                tmin,
+                                timelineMax,
+                                0,
+                                visibleTimelineWidth
+                            );
+                            return (
+                                <g key={idx}>
+                                    <rect
+                                        key={idx}
+                                        x={coords.x1}
+                                        y={timelineHeight - timelineRectHeight - 20}
+                                        width={coords.x2 - coords.x1}
+                                        height={timelineRectHeight}
+                                        rx={2}
+                                        onMouseEnter={() => setHoveredEvent(idx)}
+                                        onMouseLeave={() => setHoveredEvent(-1)}
+                                        fill={colors[ev.klass]}
+                                    ></rect>
+                                    {hoveredEvent === idx && (
+                                        <text
+                                            className="tooltip-text"
+                                            x={coords.x1 + 10}
+                                            y={timelineHeight - tooltipHeight - 22}
+                                        >
+                                            {ev.klass +
+                                                "    " +
+                                                Math.round(ev.start_time - tmin).toString() +
+                                                "-" +
+                                                Math.round(ev.end_time - tmin).toString()}
+                                        </text>
+                                    )}
+                                </g>
+                            );
+                        })}
                 </svg>
             </div>
             {timelineIsHovered && (
