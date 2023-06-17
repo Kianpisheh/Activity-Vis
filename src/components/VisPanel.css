@@ -5,6 +5,7 @@
     align-items: center;
     justify-content: center;
     gap: 30px;
+    border-radius: 10px;
 }
 
 #activity-samples {
@@ -13,6 +14,7 @@
     overflow: scroll;
     overflow-x: hidden;
     background-color: #f9f4f0;
+    border-radius: 10px;
 }
 
 .activity-timeline-container {
@@ -95,7 +97,7 @@
 
 /* filter field styling */
 #filter-field {
-    border-radius: 5px;
+    border-radius: 10px;
     height: 25px;
     width: 250px;
     border: solid 1px #988282;
@@ -113,4 +115,27 @@
     gap: 5px;
     color: #624b4b;
     font-size: 14px;
+}
+
+/* scroll bar styling */
+/* For Webkit-based browsers */
+#panel-container ::-webkit-scrollbar {
+    width: 15px;
+    height: 0;
+}
+
+/* Track */
+#panel-container ::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+/* Handle */
+#panel-container ::-webkit-scrollbar-thumb {
+    background-color: #d9d0c8;
+    border-radius: 3px;
+}
+
+/* Handle on hover */
+#panel-container ::-webkit-scrollbar-thumb:hover {
+    background-color: #b0988d;
 }

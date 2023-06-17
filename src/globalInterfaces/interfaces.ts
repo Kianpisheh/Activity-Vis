@@ -4,7 +4,7 @@ export interface Activity {
     events: Event[];
 }
 
-interface Event {
+export interface Event {
     klass: string;
     name: string;
     start_time: number;

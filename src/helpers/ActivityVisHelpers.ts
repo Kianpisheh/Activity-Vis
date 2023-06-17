@@ -65,7 +65,6 @@ type FilterTextHandlerOutput = {
 
 export const handleFilterTextChange = (
     currentFilterText: string,
-    prevFilterText: string,
     prevFilterList: string[],
     eventsList: string[]
 ): FilterTextHandlerOutput => {
@@ -81,46 +80,6 @@ export const handleFilterTextChange = (
         return { updatedFilterList: [], update: false };
     }
     return { updatedFilterList: newFilterList, update: true };
-
-    // const currentFilterList = currentFilterText.split(",");
-    // const lastItem = currentFilterList[currentFilterList.length - 1].trim();
-    // let updatedFilterList: string[] = [];
-    // let update: boolean = false;
-
-    // // new character entered
-    // if (currentFilterText.length > prevFilterText.length) {
-    //     if (lastItem.length !== 0) {
-    //         // not a valid event
-    //         if (eventsList.includes(lastItem) && !prevFilterList.includes(lastItem)) {
-    //             update = true;
-    //             updatedFilterList = [...prevFilterList, lastItem];
-    //         }
-    //     }
-    // } else {
-    //     // remove the last item from prevList
-    //     const prevParts = prevFilterText.split(",");
-    //     const prevLastItem = prevParts[prevParts.length - 1].trim();
-    //     if (prevLastItem !== lastItem) {
-    //         // item removal
-    //         if (!arraysEquality(prevFilterList, currentFilterList)) {
-    //             update = true;
-    //         }
-    //         // if the new last item is also valid
-    //         else if (
-    //             eventsList.includes(lastItem) &&
-    //             lastItem.length !== 0 &&
-    //             !prevFilterList.includes(lastItem)
-    //         ) {
-    //             updatedFilterList.push(lastItem);
-    //             update = true;
-    //         }
-    //     }
-    // }
-
-    // console.log(prevFilterList);
-    // console.log(updatedFilterList);
-    // console.log(update);
-    // return { updatedFilterList: updatedFilterList, update: update };
 };
 
 const arraysEquality = (arr1: string[], arr2: string[]): boolean => {
@@ -137,4 +96,24 @@ const arraysEquality = (arr1: string[], arr2: string[]): boolean => {
     }
 
     return false;
+};
+
+export const includesAny = (arr1: string[], arr2: string[]): boolean => {
+    for (let el2 of arr2) {
+        if (arr1.includes(el2)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+export const includesAll = (arr1: string[], arr2: string[]): boolean => {
+    for (let el2 of arr2) {
+        if (!arr1.includes(el2)) {
+            return false;
+        }
+    }
+
+    return true;
 };

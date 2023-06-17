@@ -4,7 +4,8 @@ import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
-import { handleFilterTextChange } from "../helpers/ActivityVisHelpers.ts";
+import { handleFilterTextChange, includesAll } from "../helpers/ActivityVisHelpers.ts";
+import { getEventsClasses } from "../helpers/utils.ts";
 
 interface VisPanelProps {
     activities: Activity[];
@@ -69,7 +70,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                 onFilterTextChange={(currentFilterText: string, prevFilterText: string) => {
                     const { updatedFilterList, update } = handleFilterTextChange(
                         currentFilterText,
-                        prevFilterText,
                         filterList,
                         eventsList
                     );
@@ -96,14 +96,17 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                             ref={(el) => (activitySampleRefs.current[idx] = el)}
                             sample-id={idx.toString()}
                         >
-                            <ActivitySampleVis
-                                activity={activity}
-                                settings={settings}
-                                colors={colors}
-                                filterList={["a"]}
-                                sampleID={idx.toString()}
-                                visibleSamples={visibleSamples}
-                            />
+                            {(includesAll(getEventsClasses(activity.events), filterList) ||
+                                !filterList.length) && (
+                                <ActivitySampleVis
+                                    activity={activity}
+                                    settings={settings}
+                                    colors={colors}
+                                    filterList={filterList}
+                                    sampleID={idx.toString()}
+                                    visibleSamples={visibleSamples}
+                                />
+                            )}
                         </div>
                     );
                 })}
