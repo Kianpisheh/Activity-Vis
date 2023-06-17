@@ -57,7 +57,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
             </div>
             <div className="activity-timeline-container">
                 <svg className="timeline-svg" width={timelineWidth} height={timelineHeight}>
-                    {visibleSamples.includes(sampleID) && (
+                    {
                         <line
                             className="timeline-line"
                             x1={0}
@@ -65,72 +65,70 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                             y1={timelineHeight - 28}
                             y2={timelineHeight - 28}
                         ></line>
-                    )}
+                    }
                     {/*timeline ticks*/}
-                    {visibleSamples.includes(sampleID) &&
-                        timelineTicks.map((tick, idx) => {
-                            return (
-                                <text
-                                    key={idx}
-                                    className="tick-labels"
-                                    x={tick.x}
-                                    y={timelineHeight - 14}
-                                >
-                                    {tick.label}
-                                </text>
-                            );
-                        })}
+                    {timelineTicks.map((tick, idx) => {
+                        return (
+                            <text
+                                key={idx}
+                                className="tick-labels"
+                                x={tick.x}
+                                y={timelineHeight - 14}
+                            >
+                                {tick.label}
+                            </text>
+                        );
+                    })}
 
-                    {visibleSamples.includes(sampleID) &&
-                        activity.events.map((ev, idx) => {
-                            const coords = getTimelineCoords(
-                                ev.start_time,
-                                ev.end_time,
-                                tmin,
-                                timelineMax,
-                                0,
-                                visibleTimelineWidth
-                            );
-                            return (
-                                <g key={idx}>
-                                    <rect
-                                        key={idx}
-                                        x={coords.x1}
-                                        y={timelineHeight - timelineRectHeight - 34}
-                                        width={coords.x2 - coords.x1}
-                                        height={timelineRectHeight}
-                                        rx={2}
+                    {activity.events.map((ev, idx) => {
+                        const coords = getTimelineCoords(
+                            ev.start_time,
+                            ev.end_time,
+                            tmin,
+                            timelineMax,
+                            0,
+                            visibleTimelineWidth
+                        );
+                        return (
+                            <g key={idx}>
+                                <rect
+                                    key={idx}
+                                    x={coords.x1}
+                                    y={timelineHeight - timelineRectHeight - 34}
+                                    width={coords.x2 - coords.x1}
+                                    height={timelineRectHeight}
+                                    rx={2}
+                                    onMouseEnter={() => setHoveredEvent(idx)}
+                                    onMouseLeave={() => setHoveredEvent(-1)}
+                                    fill={colors[ev.klass]}
+                                ></rect>
+                                {/* specify filtered events */}
+                                {filterList.includes(ev.klass) && (
+                                    <circle
+                                        cx={Math.round(0.5 * (coords.x1 + coords.x2))}
+                                        cy={timelineHeight - timelineRectHeight - 39}
+                                        r={3}
+                                        fill={colors[ev.klass]}
                                         onMouseEnter={() => setHoveredEvent(idx)}
                                         onMouseLeave={() => setHoveredEvent(-1)}
-                                        fill={colors[ev.klass]}
-                                    ></rect>
-                                    {/* specify filtered events */}
-                                    {filterList.includes(ev.klass) && (
-                                        <circle
-                                            cx={Math.round(0.5 * (coords.x1 + coords.x2))}
-                                            cy={timelineHeight - timelineRectHeight - 39}
-                                            r={3}
-                                            fill={colors[ev.klass]}
-                                            onMouseEnter={() => setHoveredEvent(idx)}
-                                            onMouseLeave={() => setHoveredEvent(-1)}
-                                        ></circle>
-                                    )}
-                                    {hoveredEvent === idx && (
-                                        <text
-                                            className="tooltip-text"
-                                            x={coords.x1 + 10}
-                                            y={timelineHeight - tooltipHeight - 36}
-                                        >
-                                            {ev.klass +
-                                                "    " +
-                                                Math.round(ev.start_time - tmin).toString() +
-                                                "-" +
-                                                Math.round(ev.end_time - tmin).toString()}
-                                        </text>
-                                    )}
-                                </g>
-                            );
-                        })}
+                                    ></circle>
+                                )}
+                                {hoveredEvent === idx && (
+                                    <text
+                                        className="tooltip-text"
+                                        x={coords.x1 + 10}
+                                        y={timelineHeight - tooltipHeight - 36}
+                                    >
+                                        {ev.klass +
+                                            "    " +
+                                            Math.round(ev.start_time - tmin).toString() +
+                                            "-" +
+                                            Math.round(ev.end_time - tmin).toString()}
+                                    </text>
+                                )}
+                            </g>
+                        );
+                    })}
                 </svg>
             </div>
             {timelineIsHovered && (
