@@ -17,7 +17,6 @@ interface VisPanelProps {
 
 const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, eventsList }) => {
     const [filterList, setFilterList] = useState<string[]>([]);
-    const [visibleSamples, setVisibleSamples] = useState<string[]>([]);
 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -63,8 +62,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                                         settings={settings}
                                         colors={colors}
                                         filterList={filterList}
-                                        sampleID={idx.toString()}
-                                        visibleSamples={visibleSamples}
                                     />
                                 </React.Fragment>
                             )}

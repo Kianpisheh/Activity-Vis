@@ -12,8 +12,6 @@ interface ActivitySampleVisProp {
     settings: VisPanelSettings;
     colors: { [key: string]: string };
     filterList: string[];
-    visibleSamples: string[];
-    sampleID: string;
 }
 
 const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
@@ -21,8 +19,6 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
     settings,
     colors,
     filterList,
-    sampleID,
-    visibleSamples,
 }) => {
     const {
         visibleTimelineWidth,
