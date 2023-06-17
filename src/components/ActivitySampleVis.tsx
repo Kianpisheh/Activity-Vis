@@ -45,6 +45,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
     timelineWidth = timelineWidth < visibleTimelineWidth ? visibleTimelineWidth : timelineWidth;
     const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineMax);
 
+    console.log("rendered");
     return (
         <div
             className="activity-sample-vis-container"
@@ -61,8 +62,8 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                             className="timeline-line"
                             x1={0}
                             x2={timelineWidth}
-                            y1={timelineHeight - 18}
-                            y2={timelineHeight - 18}
+                            y1={timelineHeight - 28}
+                            y2={timelineHeight - 28}
                         ></line>
                     )}
                     {/*timeline ticks*/}
@@ -73,7 +74,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                     key={idx}
                                     className="tick-labels"
                                     x={tick.x}
-                                    y={timelineHeight - 4}
+                                    y={timelineHeight - 14}
                                 >
                                     {tick.label}
                                 </text>
@@ -95,7 +96,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                     <rect
                                         key={idx}
                                         x={coords.x1}
-                                        y={timelineHeight - timelineRectHeight - 24}
+                                        y={timelineHeight - timelineRectHeight - 34}
                                         width={coords.x2 - coords.x1}
                                         height={timelineRectHeight}
                                         rx={2}
@@ -107,7 +108,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                     {filterList.includes(ev.klass) && (
                                         <circle
                                             cx={Math.round(0.5 * (coords.x1 + coords.x2))}
-                                            cy={timelineHeight - timelineRectHeight - 29}
+                                            cy={timelineHeight - timelineRectHeight - 39}
                                             r={3}
                                             fill={colors[ev.klass]}
                                             onMouseEnter={() => setHoveredEvent(idx)}
@@ -118,7 +119,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                         <text
                                             className="tooltip-text"
                                             x={coords.x1 + 10}
-                                            y={timelineHeight - tooltipHeight - 26}
+                                            y={timelineHeight - tooltipHeight - 36}
                                         >
                                             {ev.klass +
                                                 "    " +

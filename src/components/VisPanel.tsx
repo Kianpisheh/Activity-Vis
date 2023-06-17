@@ -99,7 +99,8 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         >
                             {(includesAll(getEventsClasses(activity.events), filterList) ||
                                 !filterList.length) && (
-                                <SelectableArea>
+                                <React.Fragment>
+                                    <SelectableArea></SelectableArea>
                                     <ActivitySampleVis
                                         activity={activity}
                                         settings={settings}
@@ -108,7 +109,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                                         sampleID={idx.toString()}
                                         visibleSamples={visibleSamples}
                                     />
-                                </SelectableArea>
+                                </React.Fragment>
                             )}
                         </div>
                     );

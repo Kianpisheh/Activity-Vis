@@ -40,6 +40,7 @@
 
 .activity-sample-container {
     width: 97%;
+    position: relative;
 }
 
 .activity-sample-vis-container {

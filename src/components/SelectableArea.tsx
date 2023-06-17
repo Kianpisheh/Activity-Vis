@@ -6,7 +6,7 @@ type Props = {
     children: React.ReactNode;
 };
 
-const SelectableArea = (props: Props) => {
+const SelectableArea = () => {
     const [selectionStart, setSelectionStart] = useState([0, 0]);
     const [selectionEnd, setSelectionEnd] = useState([0, 0]);
     const [mouseDown, setMouseDown] = useState(false);
@@ -15,13 +15,19 @@ const SelectableArea = (props: Props) => {
     console.log(`End (${selectionEnd[0]}, ${selectionEnd[1]})`);
 
     const handleMouseDown = (e: React.MouseEvent) => {
-        setSelectionStart([e.pageX, e.pageY]);
+        setSelectionStart([
+            e.nativeEvent.clientX - e.currentTarget.getBoundingClientRect().left,
+            e.nativeEvent.clientY - e.currentTarget.getBoundingClientRect().top,
+        ]);
         setMouseDown(true);
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (mouseDown) {
-            setSelectionEnd([e.pageX, e.pageY]);
+            setSelectionEnd([
+                e.nativeEvent.clientX - e.currentTarget.getBoundingClientRect().left,
+                e.nativeEvent.clientY - e.currentTarget.getBoundingClientRect().top,
+            ]);
         }
     };
 
@@ -29,31 +35,6 @@ const SelectableArea = (props: Props) => {
         setMouseDown(false);
         setSelectionStart([0, 0]);
         setSelectionEnd([0, 0]);
-    };
-
-    const handleTransformBox = () => {
-        if (selectionStart[1] > selectionEnd[1] && selectionStart[0] > selectionEnd[0])
-            return "scaleY(-1) scaleX(-1)";
-
-        if (selectionStart[1] > selectionEnd[1]) return "scaleY(-1)";
-        if (selectionStart[0] > selectionEnd[0]) return "scaleX(-1)";
-        return null;
-    };
-
-    const baseStyle = {
-        zIndex: 10,
-        left: selectionStart[0],
-        top: selectionStart[1],
-        height: Math.abs(selectionEnd[1] - selectionStart[1] - 1),
-        width: Math.abs(selectionEnd[0] - selectionStart[0] - 1),
-        userSelect: "none",
-        transformOrigin: "top left",
-        transform: handleTransformBox(),
-    };
-
-    const selectionBoxDivStyle = {
-        backgroundColor: "transparent",
-        border: "1px dashed white",
     };
 
     return (
@@ -76,7 +57,6 @@ const SelectableArea = (props: Props) => {
                     }}
                 ></div>
             )}
-            {props.children}
         </div>
     );
 };
