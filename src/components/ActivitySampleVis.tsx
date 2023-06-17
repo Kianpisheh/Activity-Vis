@@ -104,6 +104,17 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                         onMouseLeave={() => setHoveredEvent(-1)}
                                         fill={colors[ev.klass]}
                                     ></rect>
+                                    {/* specify filtered events */}
+                                    {filterList.includes(ev.klass) && (
+                                        <circle
+                                            cx={Math.round(0.5 * (coords.x1 + coords.x2))}
+                                            cy={timelineHeight - timelineRectHeight - 25}
+                                            r={3}
+                                            fill={colors[ev.klass]}
+                                            onMouseEnter={() => setHoveredEvent(idx)}
+                                            onMouseLeave={() => setHoveredEvent(-1)}
+                                        ></circle>
+                                    )}
                                     {hoveredEvent === idx && (
                                         <text
                                             className="tooltip-text"
