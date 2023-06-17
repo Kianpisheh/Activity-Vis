@@ -15,7 +15,7 @@ function App() {
         width: 1300,
         height: 800,
         visibleTimelineWidth: 900,
-        timelineHeight: 50,
+        timelineHeight: 70,
         initialTimelineMax: 500,
         timelineRectHeight: 8,
         tooltipHeight: 15,
