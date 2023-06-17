@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces";
 import {
@@ -6,6 +6,8 @@ import {
     handleZoomEvent,
     getTimelineTicks,
 } from "../helpers/ActivityVisHelpers";
+
+import SelectableArea from "./SelectableArea";
 
 interface ActivitySampleVisProp {
     activity: Activity;
@@ -24,35 +26,58 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
         visibleTimelineWidth,
         timelineHeight,
         timelineRectHeight,
-        initialTimelineMax,
+        initialTimelineDuration,
         tooltipHeight,
     } = settings;
 
     const [hoveredEvent, setHoveredEvent] = useState(-1);
-    const [timelineMax, setTimelineMax] = useState(initialTimelineMax);
+    const [timelineDuration, setTimelineDuration] = useState(initialTimelineDuration);
+    const [startTime, setStartTime] = useState(0);
     const [timelineIsHovered, setTimelineIsHovered] = useState(false);
+
+    const svgRef = useRef<SVGSVGElement>(null);
 
     const tmin = activity.events[0].start_time;
     const last_idx = activity.events.length - 1;
     let timelineWidth = Math.ceil(
-        (activity.events[last_idx].end_time / timelineMax) * visibleTimelineWidth
+        ((activity.events[last_idx].end_time - tmin) / timelineDuration) * visibleTimelineWidth
     );
 
     timelineWidth = timelineWidth < visibleTimelineWidth ? visibleTimelineWidth : timelineWidth;
-    const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineMax);
+    const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineDuration);
 
+    console.log(timelineWidth);
     console.log("rendered");
+
+    useEffect(() => {
+        if (svgRef.current) {
+            svgRef.current.scrollTo(100, 0);
+        }
+    });
+
     return (
         <div
             className="activity-sample-vis-container"
             onMouseEnter={() => setTimelineIsHovered(true)}
             onMouseLeave={() => setTimelineIsHovered(false)}
         >
-            <div className="sample-title">
+            <div className="sample-title" style={{ width: settings.activityTitleWidth }}>
                 <p>{activity.name}</p>
             </div>
-            <div className="activity-timeline-container">
-                <svg className="timeline-svg" width={timelineWidth} height={timelineHeight}>
+            <div className="activity-timeline-container" style={{ width: "81%" }}>
+                <SelectableArea
+                    onSelectionDone={(selectionStartX: number, selectionWidth: number) => {
+                        setTimelineDuration(
+                            Math.round(timelineDuration * (selectionWidth / visibleTimelineWidth))
+                        );
+                    }}
+                ></SelectableArea>
+                <svg
+                    className="timeline-svg"
+                    ref={svgRef}
+                    width={timelineWidth}
+                    height={timelineHeight}
+                >
                     {
                         <line
                             className="timeline-line"
@@ -81,7 +106,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                             ev.start_time,
                             ev.end_time,
                             tmin,
-                            timelineMax,
+                            timelineDuration,
                             0,
                             visibleTimelineWidth
                         );
@@ -132,7 +157,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                     <button
                         className="zoom-btn"
                         onClick={() =>
-                            setTimelineMax(handleZoomEvent("-", timelineMax, initialTimelineMax))
+                            setTimelineDuration(
+                                handleZoomEvent("-", timelineDuration, initialTimelineDuration)
+                            )
                         }
                     >
                         -
@@ -140,7 +167,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                     <button
                         className="zoom-btn"
                         onClick={() =>
-                            setTimelineMax(handleZoomEvent("+", timelineMax, initialTimelineMax))
+                            setTimelineDuration(
+                                handleZoomEvent("+", timelineDuration, initialTimelineDuration)
+                            )
                         }
                     >
                         +

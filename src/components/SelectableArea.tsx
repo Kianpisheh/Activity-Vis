@@ -2,11 +2,11 @@ import React, { useState } from "react";
 
 import "./SelectableArea.css";
 
-type Props = {
-    children: React.ReactNode;
+type SelectableAreaProps = {
+    onSelectionDone: (selectionStartX: number, selectionWidth: number) => void;
 };
 
-const SelectableArea = () => {
+const SelectableArea: React.FC<SelectableAreaProps> = ({ onSelectionDone }) => {
     const [selectionStart, setSelectionStart] = useState([0, 0]);
     const [selectionEnd, setSelectionEnd] = useState([0, 0]);
     const [mouseDown, setMouseDown] = useState(false);
@@ -32,6 +32,7 @@ const SelectableArea = () => {
     };
 
     const handleMouseUp = (e: React.MouseEvent) => {
+        onSelectionDone(selectionStart[0], Math.round(selectionEnd[0] - selectionStart[0]));
         setMouseDown(false);
         setSelectionStart([0, 0]);
         setSelectionEnd([0, 0]);

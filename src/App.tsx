@@ -16,9 +16,10 @@ function App() {
         height: 800,
         visibleTimelineWidth: 900,
         timelineHeight: 80,
-        initialTimelineMax: 500,
+        initialTimelineDuration: 500,
         timelineRectHeight: 8,
         tooltipHeight: 15,
+        activityTitleWidth: 80,
     };
 
     // read activity data

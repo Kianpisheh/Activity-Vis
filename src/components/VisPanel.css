@@ -21,7 +21,6 @@
     overflow-x: scroll;
     scrollbar-width: thin; /* For Firefox */
     scrollbar-color: transparent transparent;
-    width: 81%;
 }
 
 /* For WebKit browsers (Chrome, Edge, and Safari) */
@@ -49,7 +48,6 @@
 
 .sample-title {
     display: flex;
-    width: 80px;
     text-align: right;
     justify-content: flex-end;
     align-items: center;
@@ -59,7 +57,6 @@
     color: #411919;
     font-size: 13px;
     padding-right: 15px;
-    width: 80px;
     padding-bottom: 5px;
     margin: 0;
     height: fit-content;

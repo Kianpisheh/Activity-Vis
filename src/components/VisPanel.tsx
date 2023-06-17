@@ -55,15 +55,12 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         >
                             {(includesAll(getEventsClasses(activity.events), filterList) ||
                                 !filterList.length) && (
-                                <React.Fragment>
-                                    <SelectableArea></SelectableArea>
-                                    <ActivitySampleVis
-                                        activity={activity}
-                                        settings={settings}
-                                        colors={colors}
-                                        filterList={filterList}
-                                    />
-                                </React.Fragment>
+                                <ActivitySampleVis
+                                    activity={activity}
+                                    settings={settings}
+                                    colors={colors}
+                                    filterList={filterList}
+                                />
                             )}
                         </div>
                     );

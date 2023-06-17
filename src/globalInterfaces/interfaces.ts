@@ -16,7 +16,8 @@ export interface VisPanelSettings {
     height: number;
     visibleTimelineWidth: number;
     timelineHeight: number;
-    initialTimelineMax: number;
+    initialTimelineDuration: number;
     timelineRectHeight: number;
     tooltipHeight: number;
+    activityTitleWidth: number;
 }
