@@ -67,7 +67,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
             <FilterField
-                onFilterTextChange={(currentFilterText: string, prevFilterText: string) => {
+                onFilterTextChange={(currentFilterText: string) => {
                     const { updatedFilterList, update } = handleFilterTextChange(
                         currentFilterText,
                         filterList,

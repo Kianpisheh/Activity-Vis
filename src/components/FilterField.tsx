@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface FilterFieldProps {
-    onFilterTextChange: (currentFilterText: string, prevFilterText: string) => void;
+    onFilterTextChange: (currentFilterText: string) => void;
 }
 
 const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange }) => {
     const [filterText, setFilterText] = useState("");
+
+    useEffect(() => {
+        onFilterTextChange(filterText);
+    }, [filterText]);
 
     return (
         <div id="filter-field-container">
@@ -18,7 +22,6 @@ const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange }) => {
                     placeholder="Type events..."
                     value={filterText}
                     onChange={(event) => {
-                        onFilterTextChange(event.target.value, filterText);
                         setFilterText(event.target.value);
                     }}
                 />{" "}
