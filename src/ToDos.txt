@@ -1,3 +1,2 @@
-startX update on scroll
 scrolling mistmath
 scroll by drag
