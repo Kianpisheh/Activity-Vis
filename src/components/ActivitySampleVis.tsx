@@ -52,6 +52,10 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
         }
     }, [svgStartX]);
 
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        setSvgStartX(e.currentTarget.scrollLeft);
+    };
+
     return (
         <div
             className="activity-sample-vis-container"
@@ -65,6 +69,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                 className="activity-timeline-container"
                 ref={svgContainerRef}
                 style={{ width: "81%" }}
+                onScroll={handleScroll}
             >
                 <SelectableArea
                     settings={settings}
