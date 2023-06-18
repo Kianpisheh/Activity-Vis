@@ -32,10 +32,10 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
 
     const [hoveredEvent, setHoveredEvent] = useState(-1);
     const [timelineDuration, setTimelineDuration] = useState(initialTimelineDuration);
-    const [startTime, setStartTime] = useState(0);
+    const [svgStartX, setSvgStartX] = useState(0);
     const [timelineIsHovered, setTimelineIsHovered] = useState(false);
 
-    const svgRef = useRef<SVGSVGElement>(null);
+    const svgContainerRef = useRef<HTMLDivElement>(null);
 
     const tmin = activity.events[0].start_time;
     const last_idx = activity.events.length - 1;
@@ -47,10 +47,10 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
     const timelineTicks = getTimelineTicks(visibleTimelineWidth, timelineWidth, timelineDuration);
 
     useEffect(() => {
-        if (svgRef.current) {
-            svgRef.current.scrollTo(100, 0);
+        if (svgContainerRef && svgContainerRef.current) {
+            svgContainerRef.current.scrollTo(svgStartX, 0);
         }
-    });
+    }, [svgStartX]);
 
     return (
         <div
@@ -61,14 +61,29 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
             <div className="sample-title" style={{ width: settings.activityTitleWidth }}>
                 <p>{activity.name}</p>
             </div>
-            <div className="activity-timeline-container" style={{ width: "81%" }}>
-                <SelectableArea>
-                    <svg
-                        className="timeline-svg"
-                        ref={svgRef}
-                        width={timelineWidth}
-                        height={timelineHeight}
-                    >
+            <div
+                className="activity-timeline-container"
+                ref={svgContainerRef}
+                style={{ width: "81%" }}
+            >
+                <SelectableArea
+                    settings={settings}
+                    selectableStartX={svgStartX}
+                    onSelectionDone={(selectionStartX, selectionWidth) => {
+                        console.log(`selection x: ${selectionStartX}`);
+                        const newTimelineDuration = Math.round(
+                            timelineDuration * (selectionWidth / visibleTimelineWidth)
+                        );
+                        setSvgStartX(
+                            Math.round(
+                                (selectionStartX + svgStartX) *
+                                    (timelineDuration / newTimelineDuration)
+                            )
+                        );
+                        setTimelineDuration(newTimelineDuration);
+                    }}
+                >
+                    <svg className="timeline-svg" width={timelineWidth} height={timelineHeight}>
                         {
                             <line
                                 className="timeline-line"
