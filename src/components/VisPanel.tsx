@@ -4,9 +4,8 @@ import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
-import { handleFilterTextChange, includesAll } from "../helpers/ActivityVisHelpers.ts";
+import { handleFilterTextChange, inclusionCheck } from "../helpers/ActivityVisHelpers.ts";
 import { getEventsClasses } from "../helpers/utils.ts";
-import SelectableArea from "./SelectableArea.tsx";
 
 interface VisPanelProps {
     activities: Activity[];
@@ -30,6 +29,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         filterList,
                         eventsList
                     );
+                    console.log(`list: ${updatedFilterList}`);
                     if (update) {
                         setFilterList(updatedFilterList);
                     }
@@ -51,7 +51,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                             ref={(el) => (activitySampleRefs.current[idx] = el)}
                             sample-id={idx.toString()}
                         >
-                            {(includesAll(getEventsClasses(activity.events), filterList) ||
+                            {(inclusionCheck(getEventsClasses(activity.events), filterList) ||
                                 !filterList.length) && (
                                 <ActivitySampleVis
                                     activity={activity}

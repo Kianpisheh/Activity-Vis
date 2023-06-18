@@ -25,10 +25,10 @@ export const handleZoomEvent = (
     minTimelineMax: number
 ): number => {
     if (zoom === "-") {
-        return Math.min(minTimelineMax, Math.round(1.2 * currentTimelineMax));
+        return Math.min(minTimelineMax, Math.round(1.5 * currentTimelineMax));
     }
 
-    return Math.round(0.8 * currentTimelineMax);
+    return Math.round(0.5 * currentTimelineMax);
 };
 
 type Tick = {
@@ -71,8 +71,12 @@ export const handleFilterTextChange = (
     let newFilterList: string[] = [];
     const filterParts: string[] = currentFilterText.split(",");
     for (let item of filterParts) {
-        if (item.trim() !== "" && eventsList.includes(item.trim())) {
-            newFilterList.push(item.trim());
+        // remove trailing and heading whitespaces
+        let trItem = item.trim();
+        // exclusion handling (e.g, -mug)
+        let pureItem = trItem.startsWith("-") ? trItem.substring(1) : trItem;
+        if (trItem !== "" && eventsList.includes(pureItem)) {
+            newFilterList.push(trItem);
         }
     }
 
@@ -111,6 +115,29 @@ export const includesAny = (arr1: string[], arr2: string[]): boolean => {
 export const includesAll = (arr1: string[], arr2: string[]): boolean => {
     for (let el2 of arr2) {
         if (!arr1.includes(el2)) {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+export const inclusionCheck = (arr1: string[], arr2: string[]): boolean => {
+    const excludedItems = arr2.filter((item) => item.startsWith("-"));
+    const includedItems = arr2.filter((item) => !item.startsWith("-"));
+
+    if (excludedItems.length) {
+        console.log("excludedItems", excludedItems);
+    }
+
+    for (let exItem of excludedItems) {
+        if (arr1.includes(exItem.substring(1))) {
+            return false;
+        }
+    }
+
+    for (let inItem of includedItems) {
+        if (!arr1.includes(inItem)) {
             return false;
         }
     }

@@ -1,2 +1,6 @@
+exclude events
+diff filter: what are the differences b/w samples
+
 scrolling mistmath
 scroll by drag
+zoom-resetW
