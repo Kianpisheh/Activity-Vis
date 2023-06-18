@@ -31,8 +31,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         eventsList
                     );
                     if (update) {
-                        console.log("updated");
-                        console.log(updatedFilterList);
                         setFilterList(updatedFilterList);
                     }
                 }}
