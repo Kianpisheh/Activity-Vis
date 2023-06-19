@@ -1,5 +1,7 @@
-exclude events
 diff filter: what are the differences b/w samples
+order axiom 
+duration axiom
+occurrance axiom
 
 scrolling mistmath
 scroll by drag

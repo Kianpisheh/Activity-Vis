@@ -1,3 +1,5 @@
+import { Event } from "../globalInterfaces/interfaces";
+
 type Coords = {
     x1: number;
     x2: number;
@@ -126,10 +128,6 @@ export const inclusionCheck = (arr1: string[], arr2: string[]): boolean => {
     const excludedItems = arr2.filter((item) => item.startsWith("-"));
     const includedItems = arr2.filter((item) => !item.startsWith("-"));
 
-    if (excludedItems.length) {
-        console.log("excludedItems", excludedItems);
-    }
-
     for (let exItem of excludedItems) {
         if (arr1.includes(exItem.substring(1))) {
             return false;
@@ -142,5 +140,19 @@ export const inclusionCheck = (arr1: string[], arr2: string[]): boolean => {
         }
     }
 
+    return true;
+};
+
+export const getEventsClasses = (events: Event[]): string[] => {
+    let eventClasses: string[] = [];
+
+    for (let ev of events) {
+        eventClasses.push(ev.klass);
+    }
+
+    return eventClasses;
+};
+
+export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boolean => {
     return true;
 };

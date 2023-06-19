@@ -4,8 +4,11 @@ import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
-import { handleFilterTextChange, inclusionCheck } from "../helpers/ActivityVisHelpers.ts";
-import { getEventsClasses } from "../helpers/utils.ts";
+import {
+    handleFilterTextChange,
+    inclusionCheck,
+    getEventsClasses,
+} from "../helpers/ActivityVisHelpers.ts";
 
 interface VisPanelProps {
     activities: Activity[];
