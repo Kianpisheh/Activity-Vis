@@ -23,6 +23,12 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
 
+    // check filter criteria
+    const filterResult: boolean[] = activities.map(
+        (activity) =>
+            inclusionCheck(getEventsClasses(activity.events), filterList) || !filterList.length
+    );
+
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
             <FilterField
@@ -67,6 +73,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                     );
                 })}
             </div>
+            <span className="item-num">{`${filterResult.filter(Boolean).length} items`}</span>
         </div>
     );
 };

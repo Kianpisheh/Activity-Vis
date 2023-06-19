@@ -121,6 +121,10 @@
     font-size: 14px;
 }
 
+.item-num {
+    color: #411919;
+}
+
 /* scroll bar styling */
 /* For Webkit-based browsers */
 #panel-container ::-webkit-scrollbar {
