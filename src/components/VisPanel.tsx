@@ -8,6 +8,8 @@ import {
     handleFilterTextChange,
     inclusionCheck,
     getEventsClasses,
+    criteriaCheck,
+    criteriaCheckL,
 } from "../helpers/ActivityVisHelpers.ts";
 
 interface VisPanelProps {
@@ -24,10 +26,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
 
     // check filter criteria
-    const filterResult: boolean[] = activities.map(
-        (activity) =>
-            inclusionCheck(getEventsClasses(activity.events), filterList) || !filterList.length
-    );
+    const criteriaCheckResults = criteriaCheckL(activities, filterList);
 
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
@@ -60,8 +59,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                             ref={(el) => (activitySampleRefs.current[idx] = el)}
                             sample-id={idx.toString()}
                         >
-                            {(inclusionCheck(getEventsClasses(activity.events), filterList) ||
-                                !filterList.length) && (
+                            {(criteriaCheckResults[idx] || !filterList.length) && (
                                 <ActivitySampleVis
                                     activity={activity}
                                     settings={settings}
@@ -73,7 +71,9 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                     );
                 })}
             </div>
-            <span className="item-num">{`${filterResult.filter(Boolean).length} items`}</span>
+            <span className="item-num">{`${
+                criteriaCheckResults.filter(Boolean).length
+            } items`}</span>
         </div>
     );
 };

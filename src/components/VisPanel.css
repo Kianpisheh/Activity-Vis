@@ -6,6 +6,8 @@
     justify-content: center;
     gap: 30px;
     border-radius: 10px;
+    padding-top: 15px;
+    padding-bottom: 15px;
 }
 
 #activity-samples {

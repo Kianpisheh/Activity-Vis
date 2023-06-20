@@ -1,4 +1,4 @@
-import { Event } from "../globalInterfaces/interfaces";
+import { Event, Activity } from "../globalInterfaces/interfaces";
 
 type Coords = {
     x1: number;
@@ -72,20 +72,62 @@ export const handleFilterTextChange = (
 ): FilterTextHandlerOutput => {
     let newFilterList: string[] = [];
     const filterParts: string[] = currentFilterText.split(",");
+    const trailingDigitsRegex = /(\d+)$/;
+
     for (let item of filterParts) {
         // remove trailing and heading whitespaces
-        let trItem = item.trim();
-        // exclusion handling (e.g, -mug)
-        let pureItem = trItem.startsWith("-") ? trItem.substring(1) : trItem;
-        if (trItem !== "" && eventsList.includes(pureItem)) {
-            newFilterList.push(trItem);
+        let filter = item.trim();
+
+        const filterType = getFilterType(filter);
+
+        let queriedEvent = "";
+
+        if (filterType === "inclusion") {
+            queriedEvent = filter;
+        } else if (filterType === "exclusion") {
+            queriedEvent = filter.substring(1);
+        } else if (filterType === "duration") {
+            const filterParts = filter.split(":");
+            queriedEvent = filterParts[0];
+            // check if the bounds are number
+            if (isNaN(Number(filterParts[1]))) {
+                continue;
+            }
+            if ((filterParts[2].trim() !== "", isNaN(Number(filterParts[2])))) {
+                continue;
+            }
+
+            // check if max > min
+            if (filterParts[2].trim() !== "") {
+                if (Number(filterParts[2]) <= Number(filterParts[1])) {
+                    continue;
+                }
+            }
+        } else {
+            continue;
+        }
+
+        if (queriedEvent !== "" && eventsList.includes(queriedEvent)) {
+            newFilterList.push(filter);
         }
     }
+
+    console.log("newFilterList: ", newFilterList);
 
     if (arraysEquality(newFilterList, prevFilterList)) {
         return { updatedFilterList: [], update: false };
     }
     return { updatedFilterList: newFilterList, update: true };
+};
+
+const getFilterType = (filterText: string): string => {
+    if (filterText.startsWith("-")) {
+        return "exclusion";
+    } else if (filterText.includes(":") && filterText.split(":").length == 3) {
+        return "duration";
+    }
+
+    return "inclusion";
 };
 
 const arraysEquality = (arr1: string[], arr2: string[]): boolean => {
@@ -154,5 +196,80 @@ export const getEventsClasses = (events: Event[]): string[] => {
 };
 
 export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boolean => {
+    const eventClasses = getEventsClasses(activityEvents);
+
+    for (let axiom of axiomList) {
+        const axiomType = getFilterType(axiom);
+        if (axiomType === "inclusion") {
+            if (!eventClasses.includes(axiom)) {
+                return false;
+            }
+        } else if (axiomType === "exclusion") {
+            if (eventClasses.includes(axiom)) {
+                return false;
+            }
+        } else if (axiomType === "duration") {
+            // check inclusion
+            const queriedEvent = axiom.split(":")[0];
+            if (!eventClasses.includes(queriedEvent)) {
+                return false;
+            }
+
+            // check the temporal condition
+            const bounds = getDurationBounds(axiom);
+            console.log("bounds", bounds);
+            for (let ev of activityEvents) {
+                if (ev.klass === queriedEvent && !temporalCheck(ev, bounds)) {
+                    console.log("temporal check failed");
+                    return false;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    return true;
+};
+
+export const criteriaCheckL = (activities: Activity[], axiomList: string[]): boolean[] => {
+    let checkRes: boolean[] = [];
+    for (let activity of activities) {
+        checkRes.push(criteriaCheck(activity.events, axiomList));
+    }
+
+    return checkRes;
+};
+
+const getDurationBounds = (filter: string): number[] => {
+    let bounds: number[] = [];
+    const filterParts = filter.split(":");
+
+    if (!isNaN(Number(filterParts[1]))) {
+        bounds.push(Number(filterParts[1]));
+    }
+
+    if (!isNaN(Number(filterParts[2]))) {
+        if (Number(filterParts[2]) === 0) {
+            bounds.push(100000);
+        } else {
+            bounds.push(Number(filterParts[2]));
+        }
+    }
+
+    return bounds;
+};
+
+const temporalCheck = (ev: Event, bounds: number[]): boolean => {
+    const duration = ev.end_time - ev.start_time;
+
+    if (duration < bounds[0]) {
+        return false;
+    }
+
+    if (bounds.length === 2 && duration > bounds[1]) {
+        return false;
+    }
+
     return true;
 };
