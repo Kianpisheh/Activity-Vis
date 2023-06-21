@@ -221,13 +221,12 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
             let durationAxiomSatisfied = false;
             for (let ev of activityEvents) {
                 if (ev.klass === queriedEvent && temporalCheck(ev, bounds)) {
-                    console.log("temporal check failed");
                     durationAxiomSatisfied = true;
                     break;
                 }
             }
             if (!durationAxiomSatisfied) {
-                true;
+                return false;
             }
         } else {
             return false;
@@ -277,4 +276,26 @@ const temporalCheck = (ev: Event, bounds: number[]): boolean => {
     }
 
     return true;
+};
+
+export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
+    for (let filter of filterList) {
+        const filterType = getFilterType(filter);
+
+        if (filterType === "duration") {
+            if (filter.includes(ev.klass) && temporalCheck(ev, getDurationBounds(filter))) {
+                return true;
+            }
+        } else if (filterType === "inclusion") {
+            if (ev.klass === filter) {
+                return true;
+            }
+        } else if (filterType === "exclusion") {
+            if (filter.includes(ev.klass)) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 };

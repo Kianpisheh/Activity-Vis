@@ -5,6 +5,7 @@ import {
     getTimelineCoords,
     handleZoomEvent,
     getTimelineTicks,
+    satisfiedInstance,
 } from "../helpers/ActivityVisHelpers";
 
 import SelectableArea from "./SelectableArea";
@@ -137,7 +138,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = ({
                                         fill={colors[ev.klass]}
                                     ></rect>
                                     {/* specify filtered events */}
-                                    {filterList.includes(ev.klass) && (
+                                    {satisfiedInstance(filterList, ev) && (
                                         <circle
                                             cx={Math.round(0.5 * (coords.x1 + coords.x2))}
                                             cy={timelineHeight - timelineRectHeight - 39}
