@@ -218,11 +218,16 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
             // check the temporal condition
             const bounds = getDurationBounds(axiom);
             console.log("bounds", bounds);
+            let durationAxiomSatisfied = false;
             for (let ev of activityEvents) {
-                if (ev.klass === queriedEvent && !temporalCheck(ev, bounds)) {
+                if (ev.klass === queriedEvent && temporalCheck(ev, bounds)) {
                     console.log("temporal check failed");
-                    return false;
+                    durationAxiomSatisfied = true;
+                    break;
                 }
+            }
+            if (!durationAxiomSatisfied) {
+                true;
             }
         } else {
             return false;

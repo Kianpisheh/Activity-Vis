@@ -12,9 +12,9 @@ function App() {
     const [eventColors, setEventColors] = useState<{ [key: string]: string }>({});
 
     const visPanelSettings = {
-        width: 1300,
-        height: 800,
-        visibleTimelineWidth: 900,
+        width: 1500,
+        height: 1000,
+        visibleTimelineWidth: 1100,
         timelineHeight: 80,
         initialTimelineDuration: 500,
         timelineRectHeight: 8,
