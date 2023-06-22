@@ -4,13 +4,8 @@ import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
-import {
-    handleFilterTextChange,
-    inclusionCheck,
-    getEventsClasses,
-    criteriaCheck,
-    criteriaCheckL,
-} from "../helpers/ActivityVisHelpers.ts";
+import { EventListPane } from "./EventsListPane.tsx";
+import { handleFilterTextChange, criteriaCheckL } from "../helpers/ActivityVisHelpers.ts";
 
 interface VisPanelProps {
     activities: Activity[];
@@ -21,6 +16,7 @@ interface VisPanelProps {
 
 const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, eventsList }) => {
     const [filterList, setFilterList] = useState<string[]>([]);
+    const [filterText, setFilterText] = useState("");
 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -32,6 +28,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
             <FilterField
                 onFilterTextChange={(currentFilterText: string) => {
+                    setFilterText(currentFilterText);
                     const { updatedFilterList, update } = handleFilterTextChange(
                         currentFilterText,
                         filterList,
@@ -42,6 +39,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         setFilterList(updatedFilterList);
                     }
                 }}
+                filterText={filterText}
             />
             <div
                 id="activity-samples"
@@ -70,6 +68,19 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         </div>
                     );
                 })}
+            </div>
+            <div id="events-list-pane" style={{ height: Math.round(0.8 * settings.height) }}>
+                <EventListPane
+                    eventsList={eventsList}
+                    onEventClick={(eventKlass: string) => {
+                        setFilterText(
+                            (filterText.trim().replace(/,\s*$/, "") + ", " + eventKlass).replace(
+                                /^,\s*/,
+                                ""
+                            )
+                        );
+                    }}
+                ></EventListPane>
             </div>
             <span className="item-num">{`${
                 criteriaCheckResults.filter(Boolean).length

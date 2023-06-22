@@ -1,22 +1,55 @@
 #panel-container {
     background-color: #fffcf9;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: auto 250px;
+    grid-template-rows: 40px auto 40px;
+    row-gap: 40px;
     align-items: center;
     justify-content: center;
-    gap: 30px;
     border-radius: 10px;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 30px;
+}
+
+#filter-field {
+    grid-column: 1 / -1;
+    border-radius: 10px;
+    height: 25px;
+    width: 250px;
+    border: solid 1px #988282;
+    text-indent: 8px;
+    color: #411919;
+}
+
+#filter-field-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 #activity-samples {
+    grid-column: 1 /2;
+    grid-row: 2/3;
     display: flex;
     flex-direction: column;
     overflow: scroll;
     overflow-x: hidden;
     background-color: #f9f4f0;
     border-radius: 10px;
+    align-self: stretch;
+}
+
+#events-list-pane {
+    grid-column: 2 / 3;
+    grid-row: 2/3;
+    align-self: stretch;
+}
+
+.item-num {
+    display: flex;
+    color: #411919;
+    grid-column: 1 / -1;
+    align-items: center;
+    justify-content: center;
 }
 
 .activity-timeline-container {
@@ -102,14 +135,6 @@
 }
 
 /* filter field styling */
-#filter-field {
-    border-radius: 10px;
-    height: 25px;
-    width: 250px;
-    border: solid 1px #988282;
-    text-indent: 8px;
-    color: #411919;
-}
 
 #filter-field:focus {
     outline: none;
@@ -121,10 +146,6 @@
     gap: 5px;
     color: #624b4b;
     font-size: 14px;
-}
-
-.item-num {
-    color: #411919;
 }
 
 /* scroll bar styling */

@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 
 interface FilterFieldProps {
     onFilterTextChange: (currentFilterText: string) => void;
+    filterText: string;
 }
 
-const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange }) => {
-    const [filterText, setFilterText] = useState("");
+const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange, filterText }) => {
+    // const [filterText, setFilterText] = useState("");
 
     useEffect(() => {
         onFilterTextChange(filterText);
@@ -22,7 +23,8 @@ const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange }) => {
                     placeholder="Type events..."
                     value={filterText}
                     onChange={(event) => {
-                        setFilterText(event.target.value);
+                        onFilterTextChange(event.target.value);
+                        // setFilterText(event.target.value);
                     }}
                 />{" "}
             </label>
