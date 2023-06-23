@@ -5,7 +5,7 @@ import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
 import { EventListPane } from "./EventsListPane.tsx";
-import { handleFilterTextChange, criteriaCheckL } from "../helpers/ActivityVisHelpers.ts";
+import { parseFilterText, criteriaCheckL } from "../helpers/ActivityVisHelpers.ts";
 import { VideoPlayer } from "./VideoPlayer.tsx";
 
 interface VisPanelProps {
@@ -36,7 +36,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
             <FilterField
                 onFilterTextChange={(currentFilterText: string) => {
                     setFilterText(currentFilterText);
-                    const { updatedFilterList, update } = handleFilterTextChange(
+                    const { updatedFilterList, update } = parseFilterText(
                         currentFilterText,
                         filterList,
                         eventsList

@@ -65,14 +65,13 @@ type FilterTextHandlerOutput = {
     updatedFilterList: string[];
 };
 
-export const handleFilterTextChange = (
+export const parseFilterText = (
     currentFilterText: string,
     prevFilterList: string[],
     eventsList: string[]
 ): FilterTextHandlerOutput => {
     let newFilterList: string[] = [];
     const filterParts: string[] = currentFilterText.split(",");
-    const trailingDigitsRegex = /(\d+)$/;
 
     for (let item of filterParts) {
         // remove trailing and heading whitespaces
@@ -86,8 +85,10 @@ export const handleFilterTextChange = (
             queriedEvent = filter;
         } else if (filterType === "exclusion") {
             queriedEvent = filter.substring(1);
-        } else if (filterType === "duration") {
-            const filterParts = filter.split(":");
+        } else if (filterType === "duration" || filterType === "frequency") {
+            const delimiter = filterType === "duration" ? ":" : "^";
+            const filterParts = filter.split(delimiter);
+
             queriedEvent = filterParts[0];
             // check if the bounds are number
             if (isNaN(Number(filterParts[1]))) {
@@ -123,8 +124,10 @@ export const handleFilterTextChange = (
 const getFilterType = (filterText: string): string => {
     if (filterText.startsWith("-")) {
         return "exclusion";
-    } else if (filterText.includes(":") && filterText.split(":").length == 3) {
+    } else if (filterText.includes(":") && filterText.split(":").length === 3) {
         return "duration";
+    } else if (filterText.includes("^") && filterText.split("^").length === 3) {
+        return "frequency";
     }
 
     return "inclusion";
@@ -144,45 +147,6 @@ const arraysEquality = (arr1: string[], arr2: string[]): boolean => {
     }
 
     return false;
-};
-
-export const includesAny = (arr1: string[], arr2: string[]): boolean => {
-    for (let el2 of arr2) {
-        if (arr1.includes(el2)) {
-            return true;
-        }
-    }
-
-    return false;
-};
-
-export const includesAll = (arr1: string[], arr2: string[]): boolean => {
-    for (let el2 of arr2) {
-        if (!arr1.includes(el2)) {
-            return false;
-        }
-    }
-
-    return true;
-};
-
-export const inclusionCheck = (arr1: string[], arr2: string[]): boolean => {
-    const excludedItems = arr2.filter((item) => item.startsWith("-"));
-    const includedItems = arr2.filter((item) => !item.startsWith("-"));
-
-    for (let exItem of excludedItems) {
-        if (arr1.includes(exItem.substring(1))) {
-            return false;
-        }
-    }
-
-    for (let inItem of includedItems) {
-        if (!arr1.includes(inItem)) {
-            return false;
-        }
-    }
-
-    return true;
 };
 
 export const getEventsClasses = (events: Event[]): string[] => {
@@ -216,7 +180,7 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
             }
 
             // check the temporal condition
-            const bounds = getDurationBounds(axiom);
+            const bounds = getAxiomBounds(axiom);
             console.log("bounds", bounds);
             let durationAxiomSatisfied = false;
             for (let ev of activityEvents) {
@@ -226,6 +190,17 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
                 }
             }
             if (!durationAxiomSatisfied) {
+                return false;
+            }
+        } else if (axiomType === "frequency") {
+            const queriedEvent = axiom.split("^")[0];
+            if (!eventClasses.includes(queriedEvent)) {
+                return false;
+            }
+
+            // check freqeuncy condition
+            const bounds = getAxiomBounds(axiom);
+            if (!frequencyCheck(getEventsClasses(activityEvents), queriedEvent, bounds)) {
                 return false;
             }
         } else {
@@ -245,9 +220,10 @@ export const criteriaCheckL = (activities: Activity[], axiomList: string[]): boo
     return checkRes;
 };
 
-const getDurationBounds = (filter: string): number[] => {
+const getAxiomBounds = (filter: string): number[] => {
     let bounds: number[] = [];
-    const filterParts = filter.split(":");
+    const delimiter = getFilterType(filter) === "duration" ? ":" : "^";
+    const filterParts = filter.split(delimiter);
 
     if (!isNaN(Number(filterParts[1]))) {
         bounds.push(Number(filterParts[1]));
@@ -278,12 +254,17 @@ const temporalCheck = (ev: Event, bounds: number[]): boolean => {
     return true;
 };
 
+const frequencyCheck = (events: string[], queriedEvent: string, bounds: number[]): boolean => {
+    const num = events.filter((ev) => ev === queriedEvent).length;
+    return num >= bounds[0] && num <= bounds[1];
+};
+
 export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
     for (let filter of filterList) {
         const filterType = getFilterType(filter);
 
         if (filterType === "duration") {
-            if (filter.includes(ev.klass) && temporalCheck(ev, getDurationBounds(filter))) {
+            if (filter.includes(ev.klass) && temporalCheck(ev, getAxiomBounds(filter))) {
                 return true;
             }
         } else if (filterType === "inclusion") {
