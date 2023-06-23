@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
@@ -6,6 +6,7 @@ import ActivitySampleVis from "./ActivitySampleVis.tsx";
 import FilterField from "./FilterField.tsx";
 import { EventListPane } from "./EventsListPane.tsx";
 import { handleFilterTextChange, criteriaCheckL } from "../helpers/ActivityVisHelpers.ts";
+import { VideoPlayer } from "./VideoPlayer.tsx";
 
 interface VisPanelProps {
     activities: Activity[];
@@ -17,12 +18,18 @@ interface VisPanelProps {
 const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, eventsList }) => {
     const [filterList, setFilterList] = useState<string[]>([]);
     const [filterText, setFilterText] = useState("");
+    const [focusedSample, setFocusedSample] = useState("");
 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
 
     // check filter criteria
     const criteriaCheckResults = criteriaCheckL(activities, filterList);
+
+    const handleTitleClick = useCallback(
+        (sampleTitle: string) => setFocusedSample(sampleTitle),
+        []
+    );
 
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
@@ -51,19 +58,30 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
             >
                 {activities.map((activity, idx) => {
                     return (
-                        <div
-                            key={idx}
-                            className="activity-sample-container"
-                            ref={(el) => (activitySampleRefs.current[idx] = el)}
-                            sample-id={idx.toString()}
-                        >
-                            {(criteriaCheckResults[idx] || !filterList.length) && (
-                                <ActivitySampleVis
-                                    activity={activity}
-                                    settings={settings}
-                                    colors={colors}
-                                    filterList={filterList}
-                                />
+                        <div>
+                            <div
+                                key={idx}
+                                className="activity-sample-container"
+                                ref={(el) => (activitySampleRefs.current[idx] = el)}
+                                sample-id={idx.toString()}
+                            >
+                                {(criteriaCheckResults[idx] || !filterList.length) && (
+                                    <ActivitySampleVis
+                                        activity={activity}
+                                        settings={settings}
+                                        colors={colors}
+                                        filterList={filterList}
+                                        onTitleSelected={handleTitleClick}
+                                    />
+                                )}
+                            </div>
+                            {focusedSample === activity.name && (
+                                <div className="video-player-container">
+                                    <VideoPlayer videoName={activity.name} />
+                                    <button onClick={() => setFocusedSample("")}>
+                                        Close video
+                                    </button>
+                                </div>
                             )}
                         </div>
                     );

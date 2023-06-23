@@ -15,9 +15,9 @@ export const EventListPane: React.FC<EventsListProp> = ({ eventsList, onEventCli
             </div>
             <div id="events-list">
                 <ul>
-                    {eventsList.sort().map((ev) => {
+                    {eventsList.sort().map((ev, idx) => {
                         return (
-                            <li className="event-item" onClick={() => onEventClick(ev)}>
+                            <li key={idx} className="event-item" onClick={() => onEventClick(ev)}>
                                 <span>{ev}</span>
                             </li>
                         );

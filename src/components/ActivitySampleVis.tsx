@@ -15,10 +15,11 @@ interface ActivitySampleVisProp {
     settings: VisPanelSettings;
     colors: { [key: string]: string };
     filterList: string[];
+    onTitleSelected: (title: string) => void;
 }
 
 const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
-    ({ activity, settings, colors, filterList }) => {
+    ({ activity, settings, colors, filterList, onTitleSelected }) => {
         const {
             visibleTimelineWidth,
             timelineHeight,
@@ -63,7 +64,11 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                 onMouseEnter={() => setTimelineIsHovered(true)}
                 onMouseLeave={() => setTimelineIsHovered(false)}
             >
-                <div className="sample-title" style={{ width: settings.activityTitleWidth }}>
+                <div
+                    className="sample-title"
+                    style={{ width: settings.activityTitleWidth }}
+                    onClick={() => onTitleSelected(activity.name)}
+                >
                     <p>{activity.name}</p>
                 </div>
                 <div

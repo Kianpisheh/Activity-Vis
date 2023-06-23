@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import "./App.css";
 import VisPanel from "./components/VisPanel";
+import { VideoPlayer } from "./components/VideoPlayer";
 import { Activity } from "./globalInterfaces/interfaces";
 import { readActivityData, readEventsList } from "./helpers/ActivityDataHelpers";
 import { assignColors } from "./helpers/colorHelper";
@@ -13,7 +14,7 @@ function App() {
 
     const visPanelSettings = {
         width: 1500,
-        height: 1000,
+        height: 850,
         visibleTimelineWidth: 1100,
         timelineHeight: 80,
         initialTimelineDuration: 500,
@@ -40,6 +41,26 @@ function App() {
                 console.log(err);
                 setEventsList([]);
             });
+    }, []);
+
+    useEffect(() => {
+        // const fetchVideo = async () => {
+        //     try {
+        //         const response = await fetch("http://localhost:8000/videos/", {
+        //             method: "GET",
+        //             headers: {
+        //                 "Content-Type": "video/mp4",
+        //                 Range: "bytes=0-",
+        //             },
+        //         });
+        //         if (response.ok) {
+        //             console.log(response);
+        //         }
+        //     } catch (error) {
+        //         console.log(error);
+        //     }
+        // };
+        // fetchVideo();
     }, []);
 
     return (
