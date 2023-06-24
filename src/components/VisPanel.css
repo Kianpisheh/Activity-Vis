@@ -180,11 +180,11 @@
 }
 
 .video-player-container button {
-    background-color: #dcc0b2;
+    background-color: #ca7c7c;
     border: none;
     border-radius: 7px;
     height: 25px;
     width: 110px;
-    color: #411919;
+    color: #ffffff;
     cursor: pointer;
 }

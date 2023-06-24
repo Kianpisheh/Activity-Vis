@@ -280,3 +280,12 @@ export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
 
     return false;
 };
+
+export const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds - mins * 60;
+    const minsStr = mins < 10 ? "0" + mins.toString() : mins.toString();
+    const secsStr = secs < 10 ? "0" + secs.toString() : secs.toString();
+
+    return minsStr + ":" + secsStr;
+};

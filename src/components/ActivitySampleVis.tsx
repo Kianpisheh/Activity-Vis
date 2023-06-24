@@ -6,6 +6,7 @@ import {
     handleZoomEvent,
     getTimelineTicks,
     satisfiedInstance,
+    formatTime,
 } from "../helpers/ActivityVisHelpers";
 
 import SelectableArea from "./SelectableArea";
@@ -16,10 +17,11 @@ interface ActivitySampleVisProp {
     colors: { [key: string]: string };
     filterList: string[];
     onTitleSelected: (title: string) => void;
+    onVideoTimeChange: (time: number) => void;
 }
 
 const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
-    ({ activity, settings, colors, filterList, onTitleSelected }) => {
+    ({ activity, settings, colors, filterList, onTitleSelected, onVideoTimeChange }) => {
         const {
             visibleTimelineWidth,
             timelineHeight,
@@ -35,7 +37,8 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
 
         const svgContainerRef = useRef<HTMLDivElement>(null);
 
-        const tmin = activity.events[0].start_time;
+        // const tmin = activity.events[0].start_time;
+        const tmin = 0;
         const last_idx = activity.events.length - 1;
         let timelineWidth = Math.ceil(
             ((activity.events[last_idx].end_time - tmin) / timelineDuration) * visibleTimelineWidth
@@ -141,6 +144,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                             }}
                                             onMouseLeave={() => setHoveredEvent(-1)}
                                             fill={colors[ev.klass]}
+                                            onMouseDown={() => {
+                                                onVideoTimeChange(ev.start_time);
+                                            }}
                                         ></rect>
                                         {/* specify filtered events */}
                                         {satisfiedInstance(filterList, ev) && (
@@ -161,9 +167,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                             >
                                                 {ev.klass +
                                                     "    " +
-                                                    Math.round(ev.start_time - tmin).toString() +
+                                                    formatTime(Math.round(ev.start_time - tmin)) +
                                                     "-" +
-                                                    Math.round(ev.end_time - tmin).toString()}
+                                                    formatTime(Math.round(ev.end_time - tmin))}
                                             </text>
                                         )}
                                     </g>

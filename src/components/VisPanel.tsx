@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
@@ -19,6 +19,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     const [filterList, setFilterList] = useState<string[]>([]);
     const [filterText, setFilterText] = useState("");
     const [focusedSample, setFocusedSample] = useState("");
+    const [jumpToSecond, setJumpToSecond] = useState(0);
 
     const activitySamplesContainerRef = useRef<HTMLDivElement | null>(null);
     const activitySampleRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -26,10 +27,15 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     // check filter criteria
     const criteriaCheckResults = criteriaCheckL(activities, filterList);
 
-    const handleTitleClick = useCallback(
-        (sampleTitle: string) => setFocusedSample(sampleTitle),
-        []
-    );
+    const handleTitleClick = useCallback((sampleTitle: string) => {
+        setFocusedSample((prevFocusedSample) =>
+            prevFocusedSample === sampleTitle ? "" : sampleTitle
+        );
+    }, []);
+
+    const handleVideoTimeChange = useCallback((time: number) => {
+        setJumpToSecond(time);
+    }, []);
 
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
@@ -72,12 +78,16 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                                         colors={colors}
                                         filterList={filterList}
                                         onTitleSelected={handleTitleClick}
+                                        onVideoTimeChange={handleVideoTimeChange}
                                     />
                                 )}
                             </div>
                             {focusedSample === activity.name && (
                                 <div className="video-player-container">
-                                    <VideoPlayer videoName={activity.name} />
+                                    <VideoPlayer
+                                        videoName={activity.name}
+                                        jumpRequest={jumpToSecond}
+                                    />
                                     <button onClick={() => setFocusedSample("")}>
                                         Close video
                                     </button>
