@@ -78,7 +78,9 @@ export const parseFilterText = (
         let filter = item.trim();
 
         const filterType = getFilterType(filter);
-        const queriedEvent = getQueriedEvent(filter);
+        let queriedEvent = getQueriedEvent(filter);
+
+        console.log("queriedEvent", queriedEvent);
 
         // check queried bounds validity
         if (filterType === "duration" || filterType === "frequency") {
@@ -96,6 +98,9 @@ export const parseFilterText = (
                 }
             }
         }
+
+        // handle substring search
+        queriedEvent = queriedEvent.split("*")[0];
 
         if (queriedEvent !== "" && eventsList.includes(queriedEvent)) {
             newFilterList.push(filter);
@@ -172,17 +177,28 @@ export const getEventsClasses = (events: Event[]): string[] => {
     return eventClasses;
 };
 
-export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boolean => {
+export const checkInstanceSatisfaction = (
+    activityEvents: Event[],
+    axiomList: string[]
+): boolean => {
     const eventClasses = getEventsClasses(activityEvents);
 
     for (let axiom of axiomList) {
         const axiomType = getFilterType(axiom);
         if (axiomType === "inclusion") {
-            if (!eventClasses.includes(axiom)) {
+            if (axiom.endsWith("*")) {
+                if (!listIncludesSubstring(eventClasses, axiom.split("*")[0])) {
+                    return false;
+                }
+            } else if (!eventClasses.includes(axiom)) {
                 return false;
             }
         } else if (axiomType === "exclusion") {
-            if (eventClasses.includes(axiom)) {
+            if (axiom.endsWith("*")) {
+                if (listIncludesSubstring(eventClasses, axiom.split("*")[0])) {
+                    return false;
+                }
+            } else if (eventClasses.includes(axiom)) {
                 return false;
             }
         } else if (axiomType === "duration") {
@@ -224,10 +240,20 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
     return true;
 };
 
+const listIncludesSubstring = (arr: string[], str: string): boolean => {
+    for (let el of arr) {
+        if (el.includes(str)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
 export const criteriaCheckL = (activities: Activity[], axiomList: string[]): boolean[] => {
     let checkRes: boolean[] = [];
     for (let activity of activities) {
-        checkRes.push(criteriaCheck(activity.events, axiomList));
+        checkRes.push(checkInstanceSatisfaction(activity.events, axiomList));
     }
 
     return checkRes;
@@ -277,7 +303,11 @@ export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
         const filterType = getFilterType(filter);
         const queriedEvent = getQueriedEvent(filter);
 
-        if (!matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])) {
+        if (queriedEvent.endsWith("*")) {
+            if (!includedInAny(queriedEvent.split("*")[0], [ev.klass, ev.klass0, ev.klass2])) {
+                return false;
+            }
+        } else if (!matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])) {
             return false;
         }
 
@@ -288,6 +318,16 @@ export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
             if (temporalCheck(ev, getAxiomBounds(filter))) {
                 return true;
             }
+        }
+    }
+
+    return false;
+};
+
+const includedInAny = (str: string, arr: string[]): boolean => {
+    for (let el of arr) {
+        if (el.includes(str)) {
+            return true;
         }
     }
 
