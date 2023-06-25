@@ -1,5 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 
+import debounce from "lodash.debounce";
+
 import "./VisPanel.css";
 import { Activity, VisPanelSettings } from "../globalInterfaces/interfaces.ts";
 import ActivitySampleVis from "./ActivitySampleVis.tsx";
@@ -38,24 +40,34 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
         setJumpToSecond(time);
     }, []);
 
+    const handleFilterUpdate = (currentFilterText: string) => {
+        setFilterText(currentFilterText);
+        const updatedFilterList = updateFIlterList(currentFilterText, filterList, eventsList);
+    };
+
+    const updateFIlterList = useCallback(
+        debounce(
+            (currentFilterText: string, filterList: string[], eventsList: string[]): string[] => {
+                console.log("called");
+                const { updatedFilterList, update } = parseFilterText(
+                    currentFilterText,
+                    filterList,
+                    eventsList
+                );
+                if (update) {
+                    setFilterList(updatedFilterList);
+                }
+
+                return updatedFilterList;
+            },
+            400
+        ),
+        []
+    );
+
     return (
         <div id="panel-container" style={{ width: settings.width, height: settings.height }}>
-            <FilterField
-                onFilterTextChange={(currentFilterText: string) => {
-                    setFilterText(currentFilterText);
-                    const { updatedFilterList, update } = parseFilterText(
-                        currentFilterText,
-                        filterList,
-                        eventsList
-                    );
-                    if (update) {
-                        setFilterList(updatedFilterList);
-                    }
-
-                    console.log("first", updatedFilterList);
-                }}
-                filterText={filterText}
-            />
+            <FilterField onFilterTextChange={handleFilterUpdate} filterText={filterText} />
             <div
                 id="activity-samples"
                 ref={activitySamplesContainerRef}
@@ -102,14 +114,14 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
             <div id="events-list-pane" style={{ height: Math.round(0.8 * settings.height) }}>
                 <EventListPane
                     eventsList={eventsList}
-                    onEventClick={(eventKlass: string) => {
+                    onEventClick={useCallback((eventKlass: string) => {
                         setFilterText(
                             (filterText.trim().replace(/,\s*$/, "") + ", " + eventKlass).replace(
                                 /^,\s*/,
                                 ""
                             )
                         );
-                    }}
+                    }, [])}
                 ></EventListPane>
             </div>
             <span className="item-num">{`${
