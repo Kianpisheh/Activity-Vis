@@ -31,6 +31,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
         setFocusedSample((prevFocusedSample) =>
             prevFocusedSample === sampleTitle ? "" : sampleTitle
         );
+        setJumpToSecond(0);
     }, []);
 
     const handleVideoTimeChange = useCallback((time: number) => {
@@ -47,10 +48,11 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                         filterList,
                         eventsList
                     );
-                    console.log(`list: ${updatedFilterList}`);
                     if (update) {
                         setFilterList(updatedFilterList);
                     }
+
+                    console.log("first", updatedFilterList);
                 }}
                 filterText={filterText}
             />

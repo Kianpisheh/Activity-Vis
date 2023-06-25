@@ -10,22 +10,6 @@
     padding: 30px;
 }
 
-#filter-field {
-    grid-column: 1 / -1;
-    border-radius: 10px;
-    height: 25px;
-    width: 250px;
-    border: solid 1px #988282;
-    text-indent: 8px;
-    color: #411919;
-}
-
-#filter-field-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
 #activity-samples {
     grid-column: 1 /2;
     grid-row: 2/3;
@@ -50,102 +34,6 @@
     grid-column: 1 / -1;
     align-items: center;
     justify-content: center;
-}
-
-.activity-timeline-container {
-    overflow-x: scroll;
-    scrollbar-width: thin; /* For Firefox */
-    scrollbar-color: transparent transparent;
-}
-
-/* For WebKit browsers (Chrome, Edge, and Safari) */
-.activity-timeline-container::-webkit-scrollbar {
-    width: 6px;
-    background-color: transparent;
-}
-
-.activity-timeline-container::-webkit-scrollbar-thumb {
-    background-color: transparent;
-}
-
-.timeline-line {
-    stroke: #8c8c8c;
-}
-
-.activity-sample-container {
-    width: 97%;
-    position: relative;
-}
-
-.activity-sample-vis-container {
-    display: flex;
-}
-
-.sample-title {
-    display: flex;
-    text-align: right;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.sample-title p {
-    color: #411919;
-    font-size: 13px;
-    padding-right: 15px;
-    padding-bottom: 5px;
-    margin: 0;
-    height: fit-content;
-    user-select: none;
-    cursor: pointer;
-}
-
-.zoom-buttons-container {
-    display: flex;
-    align-items: center;
-    padding-left: 20px;
-    gap: 10px;
-    width: 60px;
-}
-
-.zoom-btn {
-    height: 20px;
-    width: 20px;
-    padding: 0;
-    margin: 0;
-    text-align: center;
-    font-size: 17px;
-    border: none;
-    border-radius: 3px;
-    color: #411919;
-    background-color: #e0d8d0;
-    cursor: pointer;
-}
-
-.tick-labels {
-    font-size: 12px;
-    pointer-events: none;
-    user-select: none;
-}
-
-.tooltip-text {
-    fill: #411919;
-    font-size: 12px;
-    pointer-events: none;
-    user-select: none;
-}
-
-/* filter field styling */
-
-#filter-field:focus {
-    outline: none;
-}
-
-#filter-field-label {
-    align-items: center;
-    display: flex;
-    gap: 5px;
-    color: #624b4b;
-    font-size: 14px;
 }
 
 /* scroll bar styling */

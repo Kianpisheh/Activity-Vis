@@ -43,26 +43,6 @@ function App() {
             });
     }, []);
 
-    useEffect(() => {
-        // const fetchVideo = async () => {
-        //     try {
-        //         const response = await fetch("http://localhost:8000/videos/", {
-        //             method: "GET",
-        //             headers: {
-        //                 "Content-Type": "video/mp4",
-        //                 Range: "bytes=0-",
-        //             },
-        //         });
-        //         if (response.ok) {
-        //             console.log(response);
-        //         }
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // };
-        // fetchVideo();
-    }, []);
-
     return (
         <div className="App">
             <div

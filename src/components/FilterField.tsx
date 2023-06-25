@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+
+import "./FilterField.css";
 
 interface FilterFieldProps {
     onFilterTextChange: (currentFilterText: string) => void;
@@ -6,8 +8,6 @@ interface FilterFieldProps {
 }
 
 const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange, filterText }) => {
-    // const [filterText, setFilterText] = useState("");
-
     useEffect(() => {
         onFilterTextChange(filterText);
     }, [filterText]);
@@ -24,7 +24,6 @@ const FilterField: React.FC<FilterFieldProps> = ({ onFilterTextChange, filterTex
                     value={filterText}
                     onChange={(event) => {
                         onFilterTextChange(event.target.value);
-                        // setFilterText(event.target.value);
                     }}
                 />{" "}
             </label>

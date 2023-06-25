@@ -20,7 +20,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoName, jumpRequest
                 id="video-player"
                 controls
                 muted
-                autoPlay={false}
+                autoPlay
                 width={600}
                 height={320}
             >

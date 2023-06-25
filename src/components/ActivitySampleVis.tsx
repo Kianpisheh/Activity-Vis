@@ -9,6 +9,8 @@ import {
     formatTime,
 } from "../helpers/ActivityVisHelpers";
 
+import "./ActivitySampleVis.css";
+
 import SelectableArea from "./SelectableArea";
 
 interface ActivitySampleVisProp {
@@ -130,6 +132,14 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                     0,
                                     visibleTimelineWidth
                                 );
+
+                                let tooltip =
+                                    ev.klass2 == "" || ev.klass2 == ev.klass
+                                        ? "(" + ev.klass + ")"
+                                        : "(" + ev.klass + ", " + ev.klass2 + ")";
+                                tooltip += `  [${formatTime(Math.round(ev.start_time - tmin))}, 
+                                     ${formatTime(Math.round(ev.end_time - tmin))}]`;
+
                                 return (
                                     <g key={idx}>
                                         <rect
@@ -165,11 +175,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                                 x={coords.x1 + 10}
                                                 y={timelineHeight - tooltipHeight - 36}
                                             >
-                                                {ev.klass +
-                                                    "    " +
-                                                    formatTime(Math.round(ev.start_time - tmin)) +
-                                                    "-" +
-                                                    formatTime(Math.round(ev.end_time - tmin))}
+                                                {tooltip}
                                             </text>
                                         )}
                                     </g>

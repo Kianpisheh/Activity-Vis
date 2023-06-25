@@ -78,19 +78,10 @@ export const parseFilterText = (
         let filter = item.trim();
 
         const filterType = getFilterType(filter);
+        const queriedEvent = getQueriedEvent(filter);
 
-        let queriedEvent = "";
-
-        if (filterType === "inclusion") {
-            queriedEvent = filter;
-        } else if (filterType === "exclusion") {
-            queriedEvent = filter.substring(1);
-        } else if (filterType === "duration" || filterType === "frequency") {
-            const delimiter = filterType === "duration" ? ":" : "^";
-            const filterParts = filter.split(delimiter);
-
-            queriedEvent = filterParts[0];
-            // check if the bounds are number
+        // check queried bounds validity
+        if (filterType === "duration" || filterType === "frequency") {
             if (isNaN(Number(filterParts[1]))) {
                 continue;
             }
@@ -104,8 +95,6 @@ export const parseFilterText = (
                     continue;
                 }
             }
-        } else {
-            continue;
         }
 
         if (queriedEvent !== "" && eventsList.includes(queriedEvent)) {
@@ -113,12 +102,30 @@ export const parseFilterText = (
         }
     }
 
-    console.log("newFilterList: ", newFilterList);
+    console.log("newFilterList", newFilterList);
 
     if (arraysEquality(newFilterList, prevFilterList)) {
         return { updatedFilterList: [], update: false };
     }
     return { updatedFilterList: newFilterList, update: true };
+};
+
+const getQueriedEvent = (filter: string): string => {
+    let queriedEvent = "";
+    const filterType = getFilterType(filter);
+
+    if (filterType === "inclusion") {
+        queriedEvent = filter;
+    } else if (filterType === "exclusion") {
+        queriedEvent = filter.substring(1);
+    } else if (filterType === "duration" || filterType === "frequency") {
+        const delimiter = filterType === "duration" ? ":" : "^";
+        const filterParts = filter.split(delimiter);
+
+        queriedEvent = filterParts[0];
+    }
+
+    return queriedEvent;
 };
 
 const getFilterType = (filterText: string): string => {
@@ -154,6 +161,12 @@ export const getEventsClasses = (events: Event[]): string[] => {
 
     for (let ev of events) {
         eventClasses.push(ev.klass);
+        if (ev.klass2 && ev.klass2 != "") {
+            eventClasses.push(ev.klass2);
+        }
+        if (ev.klass0 && ev.klass0 != "") {
+            eventClasses.push(ev.klass0);
+        }
     }
 
     return eventClasses;
@@ -184,7 +197,7 @@ export const criteriaCheck = (activityEvents: Event[], axiomList: string[]): boo
             console.log("bounds", bounds);
             let durationAxiomSatisfied = false;
             for (let ev of activityEvents) {
-                if (ev.klass === queriedEvent && temporalCheck(ev, bounds)) {
+                if (getEventsClasses([ev]).includes(queriedEvent) && temporalCheck(ev, bounds)) {
                     durationAxiomSatisfied = true;
                     break;
                 }
@@ -262,17 +275,17 @@ const frequencyCheck = (events: string[], queriedEvent: string, bounds: number[]
 export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
     for (let filter of filterList) {
         const filterType = getFilterType(filter);
+        const queriedEvent = getQueriedEvent(filter);
 
+        if (!matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])) {
+            return false;
+        }
+
+        if (filterType === "exclusion" || filterType === "inclusion") {
+            return true;
+        }
         if (filterType === "duration") {
-            if (filter.includes(ev.klass) && temporalCheck(ev, getAxiomBounds(filter))) {
-                return true;
-            }
-        } else if (filterType === "inclusion") {
-            if (ev.klass === filter) {
-                return true;
-            }
-        } else if (filterType === "exclusion") {
-            if (filter.includes(ev.klass)) {
+            if (temporalCheck(ev, getAxiomBounds(filter))) {
                 return true;
             }
         }
@@ -288,4 +301,14 @@ export const formatTime = (seconds: number): string => {
     const secsStr = secs < 10 ? "0" + secs.toString() : secs.toString();
 
     return minsStr + ":" + secsStr;
+};
+
+const matchAny = (str: string, arr2: string[]): boolean => {
+    for (let el of arr2) {
+        if (el && el === str) {
+            return true;
+        }
+    }
+
+    return false;
 };

@@ -5,7 +5,9 @@ export interface Activity {
 }
 
 export interface Event {
+    klass0: string;
     klass: string;
+    klass2: string;
     name: string;
     start_time: number;
     end_time: number;
