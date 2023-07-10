@@ -9,9 +9,16 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ videoName, jumpRequest
         if (jumpRequest > 0) {
             if (playerRef.current) {
                 playerRef.current.currentTime = jumpRequest;
+                playerRef.current.muted = false;
             }
         }
     }, [jumpRequest]);
+
+    useEffect(() => {
+        if (playerRef.current) {
+            playerRef.current.muted = false;
+        }
+    }, []);
 
     return (
         <div className="player-container">

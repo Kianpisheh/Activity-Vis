@@ -12,6 +12,7 @@ import {
 import "./ActivitySampleVis.css";
 
 import SelectableArea from "./SelectableArea";
+import { cropActivity } from "../helpers/ActivityDataHelpers";
 
 interface ActivitySampleVisProp {
     activity: Activity;
@@ -36,6 +37,7 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
         const [timelineDuration, setTimelineDuration] = useState(initialTimelineDuration);
         const [svgStartX, setSvgStartX] = useState(0);
         const [timelineIsHovered, setTimelineIsHovered] = useState(false);
+        const [cutPoint, setCutPoint] = useState(-1);
 
         const svgContainerRef = useRef<HTMLDivElement>(null);
 
@@ -154,8 +156,31 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                             }}
                                             onMouseLeave={() => setHoveredEvent(-1)}
                                             fill={colors[ev.klass]}
-                                            onMouseDown={() => {
-                                                onVideoTimeChange(ev.start_time);
+                                            onMouseDown={(m_ev) => {
+                                                if (m_ev.shiftKey) {
+                                                    if (cutPoint === -1) {
+                                                        setCutPoint(ev.start_time);
+                                                    } else {
+                                                        // cut and save data
+                                                        const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
+                                                            JSON.stringify(
+                                                                cropActivity(
+                                                                    activity,
+                                                                    cutPoint,
+                                                                    ev.start_time
+                                                                )
+                                                            )
+                                                        )}`;
+                                                        const link = document.createElement("a");
+                                                        link.href = jsonString;
+                                                        link.download = `${activity.name}_${cutPoint}_${ev.start_time}`;
+
+                                                        link.click();
+                                                        setCutPoint(-1);
+                                                    }
+                                                } else {
+                                                    onVideoTimeChange(ev.start_time);
+                                                }
                                             }}
                                         ></rect>
                                         {/* specify filtered events */}

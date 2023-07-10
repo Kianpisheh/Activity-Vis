@@ -78,7 +78,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
             >
                 {activities.map((activity, idx) => {
                     return (
-                        <div>
+                        <div key={"1" + idx}>
                             <div
                                 key={idx}
                                 className="activity-sample-container"
@@ -97,7 +97,7 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
                                 )}
                             </div>
                             {focusedSample === activity.name && (
-                                <div className="video-player-container">
+                                <div key={"vid_cont" + idx} className="video-player-container">
                                     <VideoPlayer
                                         videoName={activity.name}
                                         jumpRequest={jumpToSecond}

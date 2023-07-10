@@ -1,3 +1,5 @@
+import { Activity } from "../globalInterfaces/interfaces";
+
 export const readActivityData = async (path: string, dataset: string) => {
     if (dataset === "epic") {
         const res = await fetch(path, {
@@ -27,4 +29,16 @@ export const readEventsList = async (path: string): Promise<string[]> => {
         console.log(err);
         return [];
     }
+};
+
+export const cropActivity = (activity: Activity, startTime: number, endTime: number): Activity => {
+    const events = activity.events;
+    let croppedActivity: Activity = { klass: activity.klass, name: activity.name, events: [] };
+    for (let ev of events) {
+        if (ev.start_time >= startTime && ev.end_time <= endTime) {
+            croppedActivity.events.push(ev);
+        }
+    }
+
+    return croppedActivity;
 };
