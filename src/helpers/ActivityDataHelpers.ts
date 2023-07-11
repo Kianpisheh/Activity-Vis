@@ -33,7 +33,11 @@ export const readEventsList = async (path: string): Promise<string[]> => {
 
 export const cropActivity = (activity: Activity, startTime: number, endTime: number): Activity => {
     const events = activity.events;
-    let croppedActivity: Activity = { klass: activity.klass, name: activity.name, events: [] };
+    let croppedActivity: Activity = {
+        klass: activity.klass,
+        name: activity.name + "_" + Math.round(startTime) + "_" + Math.round(endTime),
+        events: [],
+    };
     for (let ev of events) {
         if (ev.start_time >= startTime && ev.end_time <= endTime) {
             croppedActivity.events.push(ev);

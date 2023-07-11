@@ -173,7 +173,11 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                                         )}`;
                                                         const link = document.createElement("a");
                                                         link.href = jsonString;
-                                                        link.download = `${activity.name}_${cutPoint}_${ev.start_time}`;
+                                                        link.download = `${
+                                                            activity.name
+                                                        }_${Math.round(cutPoint)}_${Math.round(
+                                                            ev.start_time
+                                                        )}.json`;
 
                                                         link.click();
                                                         setCutPoint(-1);
@@ -192,6 +196,9 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                                                 fill={colors[ev.klass]}
                                                 onMouseEnter={() => setHoveredEvent(idx)}
                                                 onMouseLeave={() => setHoveredEvent(-1)}
+                                                onMouseDown={() => {
+                                                    onVideoTimeChange(ev.start_time);
+                                                }}
                                             ></circle>
                                         )}
                                         {hoveredEvent === idx && (
