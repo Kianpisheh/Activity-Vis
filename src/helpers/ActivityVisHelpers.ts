@@ -80,8 +80,6 @@ export const parseFilterText = (
         const filterType = getFilterType(filter);
         let queriedEvent = getQueriedEvent(filter);
 
-        console.log("queriedEvent", queriedEvent);
-
         // check queried bounds validity
         if (filterType === "duration" || filterType === "frequency") {
             if (isNaN(Number(filterParts[1]))) {
@@ -106,8 +104,6 @@ export const parseFilterText = (
             newFilterList.push(filter);
         }
     }
-
-    console.log("newFilterList", newFilterList);
 
     if (arraysEquality(newFilterList, prevFilterList)) {
         return { updatedFilterList: [], update: false };
@@ -210,7 +206,6 @@ export const checkInstanceSatisfaction = (
 
             // check the temporal condition
             const bounds = getAxiomBounds(axiom);
-            console.log("bounds", bounds);
             let durationAxiomSatisfied = false;
             for (let ev of activityEvents) {
                 if (getEventsClasses([ev]).includes(queriedEvent) && temporalCheck(ev, bounds)) {
@@ -304,17 +299,17 @@ export const satisfiedInstance = (filterList: string[], ev: Event): boolean => {
         const queriedEvent = getQueriedEvent(filter);
 
         if (queriedEvent.endsWith("*")) {
-            if (!includedInAny(queriedEvent.split("*")[0], [ev.klass, ev.klass0, ev.klass2])) {
-                return false;
+            if (includedInAny(queriedEvent.split("*")[0], [ev.klass, ev.klass0, ev.klass2])) {
+                return true;
             }
-        } else if (!matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])) {
-            return false;
-        }
-
-        if (filterType === "exclusion" || filterType === "inclusion") {
+        } else if (
+            (filterType === "exclusion" || filterType === "inclusion") &&
+            matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])
+        ) {
             return true;
         }
-        if (filterType === "duration") {
+
+        if (filterType === "duration" && matchAny(queriedEvent, [ev.klass, ev.klass0, ev.klass2])) {
             if (temporalCheck(ev, getAxiomBounds(filter))) {
                 return true;
             }

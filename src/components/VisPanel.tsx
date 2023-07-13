@@ -48,7 +48,6 @@ const VisPanel: React.FC<VisPanelProps> = ({ activities, settings, colors, event
     const debouncedUpdateFilterList = useCallback(
         debounce(
             (currentFilterText: string, filterList: string[], eventsList: string[]): string[] => {
-                console.log("called");
                 const { updatedFilterList, update } = parseFilterText(
                     currentFilterText,
                     filterList,

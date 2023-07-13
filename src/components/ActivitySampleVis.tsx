@@ -88,7 +88,6 @@ const ActivitySampleVis: React.FC<ActivitySampleVisProp> = React.memo(
                         settings={settings}
                         selectableStartX={svgStartX}
                         onSelectionDone={(selectionStartX, selectionWidth) => {
-                            console.log(`selection x: ${selectionStartX}`);
                             const newTimelineDuration = Math.round(
                                 timelineDuration * (selectionWidth / visibleTimelineWidth)
                             );

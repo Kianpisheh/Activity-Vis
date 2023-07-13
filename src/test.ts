@@ -15,4 +15,3 @@ const arraysEquality = (arr1: string[], arr2: string[]): boolean => {
 };
 
 let b = arraysEquality(["pot", "plate"], ["plate", "pot"]);
-console.log(b);
